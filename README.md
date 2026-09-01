@@ -10,12 +10,13 @@ réseau n'est fait pendant le calcul.
 donnés, et surtout la perte pour toute inclinaison imposée. Sur un toit
 existant on ne choisit pas la pente, on vérifie qu'elle reste acceptable :
 c'est la plage à moins de 5 % de perte qui sert, plus que l'optimum lui-même.
+L'optimum se calcule sur l'année entière, sur l'hiver ou sur l'été.
 
 **Rangées** — l'écartement entre rangées et le pas correspondant, à partir de
-la longueur du panneau dans la pente, de l'inclinaison, de l'orientation du
-champ et d'un critère d'ombrage. Le critère est le paramètre le plus lourd du
-calcul : « 21 décembre à midi » et « 21 décembre de 9 h à 15 h » donnent des
-écartements du simple au double.
+l'orientation du champ, de la longueur du panneau dans la pente, de
+l'inclinaison des tables et d'un critère d'ombrage. Le critère est le
+paramètre le plus lourd du calcul : « 21 décembre à midi » et « 21 décembre
+de 9 h à 15 h » donnent des écartements du simple au double.
 
 L'orientation et l'inclinaison sont communes aux deux onglets : elles
 décrivent un seul chantier. On règle l'inclinaison là où elle se lit le
@@ -24,8 +25,9 @@ reste visible dans l'onglet Inclinaison.
 
 ## Modèle de calcul
 
-La géométrie (position du soleil, ombres portées, calepinage) est exacte. Le
-modèle d'irradiation, lui, est approché, et volontairement simple :
+La géométrie — position du soleil, ombres portées, écartement des rangées —
+est exacte. Le modèle d'irradiation, lui, est approché, et volontairement
+simple :
 
 1. cinq zones climatiques françaises, décrites par douze indices de clarté
    mensuels calés sur les irradiations PVGIS ;

@@ -1,7 +1,8 @@
 # pancalc — notes pour les sessions suivantes
 
-Application web hors connexion de calcul d'inclinaison et de calepinage
-photovoltaïque. Voir `README.md` pour le modèle et ses limites.
+Application web hors connexion de calcul d'inclinaison et de distance entre
+rangées. Deux onglets, Inclinaison et Rangées. Voir `README.md` pour le
+modèle et ses limites.
 
 ## Conventions
 
@@ -37,11 +38,12 @@ photovoltaïque. Voir `README.md` pour le modèle et ses limites.
 ## Structure d'une vue
 
 Chaque onglet se découpe en trois blocs, enfants directs de la `section` :
-`.apercu` (schéma + verdict), `.details` (courbe, tableau ou paliers) et
-`.reglages` (les champs). L'aperçu doit rester enfant direct de la section :
-sur téléphone il est `sticky`, et un `sticky` cesse de suivre dès que son
-parent sort de l'écran — l'envelopper avec les seuls résultats le décrocherait
-au moment précis où l'on atteint les curseurs.
+`.apercu` (schéma + verdict, précédés du choix de période dans la vue
+Inclinaison), `.details` (courbe ou tableau de chiffres) et `.reglages` (les
+champs). L'aperçu doit rester enfant direct de la section : sur téléphone il
+est `sticky`, et un `sticky` cesse de suivre dès que son parent sort de
+l'écran — l'envelopper avec les seuls résultats le décrocherait au moment
+précis où l'on atteint les curseurs.
 
 Les curseurs ne répondent qu'à une prise sur leur poignée (`curseur.js`) :
 sur un chantier, un appui sur la piste pendant un défilement modifiait un
@@ -82,6 +84,10 @@ google-chrome --headless=new --disable-gpu --hide-scrollbars \
 Les ancres `#inclinaison` et `#rangees` ouvrent directement un onglet, ce
 qui permet de capturer chaque vue sans clic.
 
-L'onglet « Terrain » (calepinage sur profondeur contrainte : `fieldSweep`,
-`rowSteps`, paliers de rangées) a été retiré à la demande de l'utilisateur.
-Son moteur et ses tests restent récupérables au commit `1349813`.
+## Ce qui a été retiré
+
+L'onglet « Terrain » — calepinage sur profondeur contrainte : `fieldSweep`,
+`rowSteps`, `rowCount`, `fieldYield`, paliers de rangées et estimation en
+MWc/ha — a été retiré à la demande de l'utilisateur, avec son moteur, ses
+tests et ses styles plutôt que laissé sans emploi. Le tout reste récupérable
+au commit `1349813`.

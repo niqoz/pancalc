@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Garde des curseurs</title>
+<style>input[type=range]{width:332px;display:block}</style></head><body>
+<input type="range" id="c" min="0" max="90" step="1" value="45">
+<pre id="resultat">non execute</pre>
+<script type="module">
+/* Vérifie le mécanisme de garde dans un vrai navigateur : la logique de
+   position se teste sous node, mais la restauration de valeur met en jeu
+   l'ordre des écouteurs et la propagation des événements, que seul un
+   navigateur reproduit fidèlement. Lancé par tests/navigateur/lancer.sh. */
+import { limiterALaPoignee, positionPoignee } from "../../docs/curseur.js";
+
+const el = document.getElementById("c");
+limiterALaPoignee(el);
+
+let vues = [];                       // ce que l'application reçoit
+el.addEventListener("input", () => vues.push(el.value));
+
+const r = el.getBoundingClientRect();
+const prise = (x, pointerType = "touch") => el.dispatchEvent(
+  new PointerEvent("pointerdown", { clientX: r.left + x, bubbles: true, pointerType }));
+const relache = () => el.dispatchEvent(
+  new PointerEvent("pointerup", { bubbles: true, pointerType: "touch" }));
+// Reproduit ce que fait le navigateur nativement : il déplace la poignée,
+// puis émet input. C'est ce déplacement-là qu'il faut annuler.
+const deplacementNatif = (v) => {
+  el.value = v;
+  el.dispatchEvent(new Event("input", { bubbles: true }));
+};
+
+const essais = [];
+const verifier = (nom, ok, detail = "") => essais.push([nom, ok, detail]);
+
+el.value = "45"; vues = [];
+prise(10);
+deplacementNatif("3");
+verifier("prise sur la piste : valeur inchangée", el.value === "45", `valeur ${el.value}`);
+verifier("prise sur la piste : rien remonté à l'application", vues.length === 0, `${vues.length} événement(s)`);
+relache();
+
+el.value = "45"; vues = [];
+prise(positionPoignee(0, 90, 45, r.width, 32));
+deplacementNatif("60");
+verifier("prise sur la poignée : valeur suivie", el.value === "60", `valeur ${el.value}`);
+verifier("prise sur la poignée : application prévenue", vues.length === 1, `${vues.length} événement(s)`);
+relache();
+
+vues = [];
+deplacementNatif("20");
+verifier("après relâchement : le curseur répond de nouveau", el.value === "20" && vues.length === 1);
+
+el.value = "45"; vues = [];
+prise(10, "mouse");
+deplacementNatif("3");
+verifier("souris sur la piste : refusée aussi", el.value === "45" && vues.length === 0, `valeur ${el.value}`);
+relache();
+
+el.value = "0"; vues = [];
+prise(positionPoignee(0, 90, 0, r.width, 32));
+deplacementNatif("7");
+verifier("poignée au minimum : prise acceptée", el.value === "7", `valeur ${el.value}`);
+relache();
+
+const rates = essais.filter(([, ok]) => !ok);
+document.getElementById("resultat").textContent =
+  essais.map(([n, ok, d]) => `${ok ? "OK   " : "ECHEC"} ${n}${d && !ok ? ` (${d})` : ""}`).join("\n")
+  + `\nBILAN ${rates.length ? `${rates.length} ECHEC(S)` : `${essais.length} essais réussis`}`;
+</script>
+</body></html>

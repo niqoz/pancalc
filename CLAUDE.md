@@ -43,10 +43,24 @@ sur téléphone il est `sticky`, et un `sticky` cesse de suivre dès que son
 parent sort de l'écran — l'envelopper avec les seuls résultats le décrocherait
 au moment précis où l'on atteint les curseurs.
 
-Les curseurs ne répondent qu'à une prise sur leur poignée, et seulement au
-doigt (`curseur.js`) : sur un chantier, un appui sur la piste pendant un
-défilement modifiait un réglage sans qu'on le voie. À la souris, le clic sur
-la piste reste actif.
+Les curseurs ne répondent qu'à une prise sur leur poignée (`curseur.js`) :
+sur un chantier, un appui sur la piste pendant un défilement modifiait un
+réglage sans qu'on le voie. **`preventDefault()` sur `pointerdown` ne suffit
+pas** — les navigateurs déplacent la poignée dans leur code natif, hors de
+portée de l'événement. Le mécanisme laisse donc le déplacement se produire
+puis restaure la valeur, via un écouteur `input` posé sur le `document` en
+phase de capture, qui passe avant tout écouteur de l'application.
+
+Les champs sont numérotés dans l'ordre de réglage réel sur le terrain :
+l'orientation est une contrainte subie, elle vient toujours avant
+l'inclinaison, qui est ce que l'on choisit.
+
+## Essais en navigateur
+
+`tests/navigateur/lancer.sh` exécute `tests/navigateur/curseur.html` dans
+Chrome et lit son verdict via `--dump-dom`. Ces essais portent sur l'ordre
+des écouteurs et la propagation des événements, que node ne reproduit pas.
+Ils ne sont pas dans `npm test`, qui reste sans dépendance au navigateur.
 
 ## Vérification visuelle
 

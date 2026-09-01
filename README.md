@@ -47,8 +47,9 @@ Pour un chiffrage de production, repasser par PVGIS.
 ## Développement
 
 ```sh
-npm test                        # 45 tests, sans dépendance
-python3 -m http.server -d docs  # les modules ES exigent http://, pas file://
+npm test                          # 45 tests, sans dépendance
+./tests/navigateur/lancer.sh      # essais nécessitant un vrai navigateur
+python3 -m http.server -d docs    # les modules ES exigent http://, pas file://
 ```
 
 `docs/` contient l'application livrée : `solar.js` (position du soleil et

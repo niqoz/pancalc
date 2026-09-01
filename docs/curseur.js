@@ -1,11 +1,14 @@
-/* Comportement des curseurs au doigt.
+/* Comportement des curseurs.
 
-   Sur un telephone tenu a bout de bras sur un chantier, un appui sur la piste
-   d'un curseur suffit a deplacer la valeur de plusieurs degres sans qu'on
-   s'en apercoive : le doigt qui amorce un defilement se pose forcement
-   quelque part. On restreint donc la prise a la poignee, et seulement pour
-   les pointeurs tactiles : a la souris, cliquer la piste reste un geste
-   normal et sans risque. */
+   Sur un chantier, un appui sur la piste d'un curseur suffit a deplacer la
+   valeur de plusieurs degres sans qu'on s'en apercoive : le doigt qui amorce
+   un defilement se pose forcement quelque part. Seule une prise sur la
+   poignee est donc acceptee.
+
+   Annuler le geste par preventDefault sur pointerdown ne suffit pas : les
+   navigateurs deplacent la poignee dans leur code natif, hors de portee de
+   l'evenement. On laisse donc le deplacement se produire puis on remet la
+   valeur en place, ce qui ne depend d'aucun comportement annulable. */
 
 /** Abscisse du centre de la poignee, en pixels depuis le bord gauche du
     curseur. Le centre ne parcourt pas toute la largeur : il reste a une
@@ -22,13 +25,42 @@ export function horsPoignee(min, max, valeur, largeur, x, poignee, tolerance) {
   return Math.abs(x - centre) > poignee / 2 + tolerance;
 }
 
-/** Applique la restriction a un curseur. */
+/* Valeur a restaurer, par curseur, tant que la prise en cours est refusee. */
+const refus = new WeakMap();
+let gardeInstallee = false;
+
+/* Le garde ecoute sur le document en phase de capture : il passe ainsi avant
+   tout ecouteur pose sur le curseur lui-meme, quel que soit l'ordre dans
+   lequel ils ont ete ajoutes. L'application ne voit jamais la valeur refusee. */
+function installerGarde() {
+  if (gardeInstallee) return;
+  gardeInstallee = true;
+  document.addEventListener("input", (e) => {
+    const v = refus.get(e.target);
+    if (v === undefined) return;
+    e.target.value = v;
+    e.stopImmediatePropagation();
+  }, true);
+}
+
+/** Restreint un curseur a sa poignee.
+    @param poignee largeur de la poignee en pixels, doit suivre le CSS.
+    @param tolerance marge acceptee de part et d'autre. */
 export function limiterALaPoignee(el, { poignee = 32, tolerance = 10 } = {}) {
+  installerGarde();
+
   el.addEventListener("pointerdown", (e) => {
-    if (e.pointerType !== "touch") return; // la souris garde le clic sur piste
     const r = el.getBoundingClientRect();
     if (horsPoignee(+el.min, +el.max, +el.value, r.width, e.clientX - r.left, poignee, tolerance)) {
-      e.preventDefault(); // le curseur ne bouge pas, le defilement suit son cours
+      refus.set(el, el.value);
+      e.preventDefault(); // suffit sur certains navigateurs, le garde fait le reste
+    } else {
+      refus.delete(el);
     }
   });
+
+  const relacher = () => refus.delete(el);
+  for (const ev of ["pointerup", "pointercancel", "lostpointercapture", "blur"]) {
+    el.addEventListener(ev, relacher);
+  }
 }

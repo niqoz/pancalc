@@ -82,6 +82,12 @@
 
   <section id="vue-rangees" role="tabpanel" aria-labelledby="tab-rangees" tabindex="0" hidden>
     <div class="apercu">
+      <div class="champ champ-panneaux">
+        <span class="label">1 · Longueur du panneau dans la pente</span>
+        <p class="aide">Modules courants : 113 cm de large, 196 ou 228 cm de long. Posé en paysage, c'est la largeur qui se trouve dans la pente ; deux modules paysage superposés font 2,26 m.</p>
+        <div class="choix" id="longueur-choix" role="radiogroup" aria-label="Longueur du panneau"></div>
+        <input type="number" id="longueur" min="0.5" max="8" step="0.01" inputmode="decimal" class="saisie" aria-label="Longueur personnalisée du panneau en mètres">
+      </div>
       <figure class="plan" id="plan-rangees"></figure>
       <p class="verdict" id="verdict-rangees"></p>
     </div>
@@ -92,15 +98,9 @@
 
     <div class="reglages">
       <div class="champ">
-        <label for="azimut-r">1 · Orientation du champ <output id="azimut-r-val" for="azimut-r"></output></label>
+        <label for="azimut-r">2 · Orientation du champ <output id="azimut-r-val" for="azimut-r"></output></label>
         <input type="range" id="azimut-r" min="-90" max="90" step="5" value="0">
         <div class="reperes"><span>Est</span><span>Sud-Est</span><span>Sud</span><span>Sud-Ouest</span><span>Ouest</span></div>
-      </div>
-      <div class="champ">
-        <span class="label">2 · Longueur du panneau dans la pente</span>
-        <p class="aide">Modules courants : 113 cm de large, 196 ou 228 cm de long. Posé en paysage, c'est la largeur qui se trouve dans la pente ; deux modules paysage superposés font 2,26 m.</p>
-        <div class="choix" id="longueur-choix" role="radiogroup" aria-label="Longueur du panneau"></div>
-        <input type="number" id="longueur" min="0.5" max="8" step="0.01" inputmode="decimal" class="saisie">
       </div>
       <div class="champ">
         <label for="inclinaison-r">3 · Inclinaison des tables <output id="inclinaison-r-val" for="inclinaison-r"></output></label>

@@ -57,10 +57,11 @@ le mode sombre suit alors sans retouche.
 ## Structure d'une vue
 
 Chaque onglet se découpe en trois blocs, enfants directs de la `section` :
-`.apercu` (schéma + verdict, précédés du choix de période dans la vue
-Inclinaison), `.details` (courbe ou tableau de chiffres) et `.reglages` (les
-champs). L'aperçu doit rester enfant direct de la section : sur téléphone il
-est `sticky`, et un `sticky` cesse de suivre dès que son parent sort de
+`.apercu` (schéma + verdict, précédés du choix de période dans Inclinaison et
+du choix du panneau dans Rangées), `.details` (courbe ou tableau de chiffres)
+et `.reglages` (les autres champs). L'aperçu doit rester enfant direct de la
+section : sur téléphone il est `sticky`, et un `sticky` cesse de suivre dès
+que son parent sort de
 l'écran — l'envelopper avec les seuls résultats le décrocherait au moment
 précis où l'on atteint les curseurs.
 
@@ -78,9 +79,10 @@ même réglage est donc porté par plusieurs curseurs, que `rendre()` recale
 tous à chaque rendu ; leurs bornes `min` et `max` doivent rester identiques,
 sinon passer d'un onglet à l'autre tronquerait la valeur.
 
-Les champs sont numérotés dans l'ordre de réglage réel sur le terrain :
-l'orientation est une contrainte subie, elle vient toujours avant
-l'inclinaison, qui est ce que l'on choisit.
+Les champs sont numérotés dans l'ordre de réglage réel sur le terrain. Dans
+Rangées, le panneau ouvre désormais la vue afin que sa géométrie soit fixée
+avant de lire le schéma ; viennent ensuite l'orientation, l'inclinaison et le
+critère d'ombrage.
 
 ## Invite d'installation
 

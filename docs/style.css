@@ -319,6 +319,8 @@ main > section { max-width: 620px; margin: 0 auto; }
 /* --- Champs de saisie ---------------------------------------------------- */
 
 .champ { margin-top: 22px; }
+.champ-panneaux { margin-top: 14px; }
+.champ-panneaux #longueur-choix { margin-top: 10px; }
 .champ label, .champ .label {
   display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;
 }

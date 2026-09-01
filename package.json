@@ -1,0 +1,10 @@
+{
+  "name": "pancalc",
+  "version": "1.0.0",
+  "description": "Calcul d'inclinaison et de distance entre rangees de panneaux solaires",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/"
+  }
+}

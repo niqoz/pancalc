@@ -1,0 +1,294 @@
+/* pancalc — direction visuelle : le tirage de plan d'execution.
+   Fond de papier gris-bleu froid, traits nets, cotes a halo, une seule
+   couleur chaude reservee au soleil et a la valeur active. Pas de mode
+   sombre : l'application se lit sur un chantier en plein jour, ou le fond
+   clair reste le plus lisible. */
+
+@font-face {
+  font-family: "Barlow Semi Condensed";
+  src: url("vendor/barlow/barlow-semicondensed-500.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Barlow Semi Condensed";
+  src: url("vendor/barlow/barlow-semicondensed-700.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+:root {
+  --papier: #edf1f4;
+  --surface: #fbfcfd;
+  --encre: #0f171e;
+  --encre-2: #52646f;
+  --trait: #bcc8d1;
+  --soleil: #d95d06;
+  --panneau: #12456f;
+  --sol: #8a9683;
+  --ombre: #a2afb8;
+  --rayon: 3px;
+  --gouttiere: 18px;
+  font-family: "Barlow Semi Condensed", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+/* L'attribut hidden n'impose qu'un display:none de faible priorite, qu'une
+   regle de mise en page suffit a ecraser. Sans cette ligne, la grille de
+   bureau affiche les trois onglets en meme temps. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--encre);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* --- Entete -------------------------------------------------------------- */
+
+.entete {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  padding: 14px var(--gouttiere) 12px;
+  background: var(--encre); color: var(--papier);
+}
+.entete h1 {
+  margin: 0; font-size: 26px; font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.site-resume {
+  margin-left: auto; display: flex; flex-direction: column; align-items: flex-end;
+  gap: 1px; padding: 5px 11px; min-height: 44px; justify-content: center;
+  background: none; border: 1px solid #43525d; border-radius: var(--rayon);
+  color: inherit; font: inherit; cursor: pointer; text-align: right;
+}
+.site-resume:hover, .site-resume:focus-visible { border-color: var(--soleil); }
+#site-libelle { font-weight: 700; font-size: 17px; line-height: 1.1; }
+#site-detail { font-size: 13px; color: #9fb0bc; letter-spacing: 0.02em; }
+
+/* --- Panneau de site ----------------------------------------------------- */
+
+.site {
+  padding: 16px var(--gouttiere) 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--trait);
+}
+.titre-section {
+  margin: 0 0 14px; font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.11em; color: var(--encre-2);
+}
+
+/* --- Onglets ------------------------------------------------------------- */
+
+.onglets {
+  display: flex; gap: 2px; padding: 0 var(--gouttiere);
+  background: var(--encre);
+  position: sticky; top: 0; z-index: 5;
+}
+.onglets button {
+  flex: 1; min-height: 50px; padding: 0 6px;
+  background: none; border: none; border-bottom: 3px solid transparent;
+  color: #9fb0bc; font: inherit; font-size: 17px; font-weight: 700;
+  letter-spacing: 0.03em; cursor: pointer;
+}
+.onglets button[aria-selected="true"] { color: #fff; border-bottom-color: var(--soleil); }
+.onglets button:focus-visible { outline: 2px solid var(--soleil); outline-offset: -4px; }
+
+/* --- Colonnes ------------------------------------------------------------ */
+
+main { padding: 0 var(--gouttiere) 24px; }
+main > section { max-width: 620px; margin: 0 auto; }
+
+/* Colonne gauche : ce que l'on lit. Colonne droite : ce que l'on regle. */
+@media (min-width: 900px) {
+  main > section {
+    max-width: 1040px;
+    display: grid; grid-template-columns: 1.15fr 1fr;
+    column-gap: 40px; align-items: start;
+  }
+  .reglages > .champ:first-child { margin-top: 18px; }
+}
+
+/* --- Le plan : l'element signature --------------------------------------- */
+
+.plan {
+  margin: 18px 0 0; padding: 10px 4px 4px;
+  background: var(--surface);
+  border: 1px solid var(--trait); border-radius: var(--rayon);
+}
+.plan svg { display: block; width: 100%; height: auto; }
+.plan-courbe { margin-top: 14px; }
+
+.p-sol { stroke: var(--encre); stroke-width: 2; }
+.p-sol-trait { stroke: var(--sol); stroke-width: 1.4; }
+.p-ombre-trait { stroke: var(--ombre); stroke-width: 1.2; }
+
+.p-panneau { stroke: var(--panneau); stroke-width: 7; stroke-linecap: round; }
+.p-panneau-fin { stroke: var(--panneau); stroke-width: 4; stroke-linecap: round; }
+.p-panneau-fantome {
+  stroke: var(--panneau); stroke-width: 3; stroke-linecap: round;
+  opacity: 0.28; stroke-dasharray: 5 4;
+}
+
+.p-soleil { stroke: var(--soleil); stroke-width: 2.2; }
+.p-soleil-pointe { fill: var(--soleil); }
+.p-soleil-txt {
+  fill: var(--soleil); font-size: 14px; font-weight: 700;
+  paint-order: stroke; stroke: var(--surface); stroke-width: 3.5;
+}
+
+.p-cote { stroke: var(--encre-2); stroke-width: 1.1; }
+.p-cote-pointe { fill: var(--encre-2); }
+.p-attache { stroke: var(--trait); stroke-width: 1; }
+.p-cote-txt {
+  fill: var(--encre); font-size: 14px; font-weight: 700;
+  paint-order: stroke; stroke: var(--surface); stroke-width: 4;
+}
+.p-cote-txt-fort { fill: var(--soleil); font-size: 16px; }
+.p-note, .p-vide {
+  fill: var(--encre-2); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.p-echelle { stroke: var(--encre-2); stroke-width: 1.2; }
+.p-echelle-txt { fill: var(--encre-2); font-size: 12px; font-weight: 500; }
+
+.p-grille { stroke: var(--trait); stroke-width: 1; }
+.p-axe { fill: var(--encre-2); font-size: 12px; font-weight: 500; }
+.p-courbe { stroke: var(--panneau); stroke-width: 2.4; fill: none; stroke-linejoin: round; }
+.p-plage { fill: var(--soleil); opacity: 0.11; }
+.p-plage-txt {
+  fill: var(--soleil); font-size: 14px; font-weight: 700;
+  paint-order: stroke; stroke: var(--surface); stroke-width: 4;
+}
+.p-curseur { stroke: var(--soleil); stroke-width: 1.4; stroke-dasharray: 3 3; }
+.p-point { fill: var(--soleil); stroke: var(--surface); stroke-width: 2; }
+
+/* --- Verdicts et chiffres ------------------------------------------------ */
+
+.verdict {
+  margin: 14px 0 0; font-size: 21px; line-height: 1.32; font-weight: 500;
+}
+.verdict b { font-weight: 700; color: var(--soleil); white-space: nowrap; }
+.legende, .aide {
+  margin: 8px 0 0; font-size: 14px; color: var(--encre-2); line-height: 1.4;
+}
+
+/* Les separateurs sont portes par les cellules, pas par le fond du
+   conteneur : une derniere ligne incomplete reste blanche au lieu de laisser
+   apparaitre un bloc gris. */
+.chiffres {
+  margin: 16px 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  background: var(--surface); border: 1px solid var(--trait); border-radius: var(--rayon);
+  overflow: hidden;
+}
+.chiffres > div {
+  padding: 9px 11px;
+  border-right: 1px solid var(--trait); border-bottom: 1px solid var(--trait);
+}
+.chiffres dt {
+  font-size: 12px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--encre-2);
+}
+.chiffres dd { margin: 1px 0 0; font-size: 22px; font-weight: 700; }
+
+/* --- Paliers de rangees -------------------------------------------------- */
+
+.paliers { margin-top: 18px; display: flex; flex-direction: column; gap: 1px; }
+.palier {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 8px 12px; background: var(--surface);
+  border-left: 3px solid var(--trait);
+}
+.palier[data-actif="oui"] { border-left-color: var(--soleil); background: #fff5ed; }
+.palier b { font-size: 20px; font-weight: 700; min-width: 2.2em; }
+.palier span { font-size: 14px; color: var(--encre-2); }
+.palier em { margin-left: auto; font-style: normal; font-size: 15px; font-weight: 700; }
+
+/* --- Champs de saisie ---------------------------------------------------- */
+
+.champ { margin-top: 22px; }
+.champ label, .champ .label {
+  display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;
+  font-size: 14px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--encre-2);
+}
+.champ output {
+  margin-left: auto; font-size: 21px; font-weight: 700;
+  letter-spacing: 0; text-transform: none; color: var(--soleil);
+}
+.rang { display: flex; gap: 8px; }
+.rang select { flex: 1; }
+
+select, .saisie {
+  width: 100%; min-height: 48px; padding: 0 12px;
+  background: var(--surface); color: var(--encre);
+  border: 1px solid var(--trait); border-radius: var(--rayon);
+  font: inherit; font-size: 17px; font-weight: 700;
+}
+.saisie { margin-top: 8px; }
+.bouton-geo {
+  min-height: 48px; padding: 0 16px; white-space: nowrap;
+  background: var(--encre); color: var(--papier);
+  border: none; border-radius: var(--rayon);
+  font: inherit; font-size: 16px; font-weight: 700; cursor: pointer;
+}
+
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 44px; margin: 0; background: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px; background: var(--trait); border-radius: 4px;
+}
+input[type="range"]::-moz-range-track { height: 8px; background: var(--trait); border-radius: 4px; }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 32px; height: 32px; margin-top: -12px; border-radius: 50%;
+  background: var(--soleil); border: 3px solid var(--surface);
+  box-shadow: 0 1px 3px rgba(15, 23, 30, 0.35);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--soleil); border: 3px solid var(--surface);
+}
+input[type="range"]:focus-visible { outline: 2px solid var(--soleil); outline-offset: 4px; }
+
+.reperes {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--encre-2); letter-spacing: 0.04em;
+}
+
+/* --- Groupes de boutons -------------------------------------------------- */
+
+.choix { display: flex; flex-wrap: wrap; gap: 6px; }
+.choix button {
+  flex: 1 1 auto; min-height: 46px; padding: 0 14px;
+  background: var(--surface); color: var(--encre);
+  border: 1px solid var(--trait); border-radius: var(--rayon);
+  font: inherit; font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.choix button small {
+  display: block; font-size: 12px; font-weight: 500;
+  color: var(--encre-2); letter-spacing: 0.03em;
+}
+.choix button[aria-checked="true"] {
+  background: var(--encre); color: var(--papier); border-color: var(--encre);
+}
+.choix button[aria-checked="true"] small { color: #9fb0bc; }
+.choix button:focus-visible { outline: 2px solid var(--soleil); outline-offset: 2px; }
+
+/* --- Pied ---------------------------------------------------------------- */
+
+.pied {
+  max-width: 620px; margin: 0 auto; padding: 20px var(--gouttiere) 28px;
+  border-top: 1px solid var(--trait);
+}
+.pied p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--encre-2); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .p-panneau, .p-panneau-fin, .p-soleil, .p-courbe { transition: all 90ms linear; }
+}

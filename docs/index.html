@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pancalc — inclinaison et calepinage photovoltaïque</title>
+<meta name="description" content="Inclinaison optimale, distance entre rangées et calepinage sur terrain contraint. Fonctionne hors connexion.">
+<meta name="theme-color" content="#0F171E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="entete">
+  <h1>pancalc</h1>
+  <button type="button" id="ouvrir-site" class="site-resume" aria-expanded="false" aria-controls="site">
+    <span id="site-libelle">Lyon</span>
+    <span id="site-detail">45,8° N · Sud-Ouest</span>
+  </button>
+</header>
+
+<section id="site" class="site" hidden>
+  <h2 class="titre-section">Où poses-tu ?</h2>
+  <div class="champ">
+    <label for="ville">Ville la plus proche</label>
+    <div class="rang">
+      <select id="ville"></select>
+      <button type="button" id="geoloc" class="bouton-geo">Ma position</button>
+    </div>
+    <p id="geoloc-etat" class="aide" role="status"></p>
+  </div>
+  <div class="champ">
+    <label for="latitude">Latitude <output id="latitude-val" for="latitude"></output></label>
+    <input type="range" id="latitude" min="41" max="51.5" step="0.1">
+  </div>
+  <div class="champ">
+    <label for="climat">Zone climatique</label>
+    <select id="climat"></select>
+    <p id="climat-aide" class="aide"></p>
+  </div>
+</section>
+
+<nav class="onglets" role="tablist" aria-label="Calculs">
+  <button role="tab" id="tab-inclinaison" aria-controls="vue-inclinaison" aria-selected="true">Inclinaison</button>
+  <button role="tab" id="tab-rangees" aria-controls="vue-rangees" aria-selected="false" tabindex="-1">Rangées</button>
+  <button role="tab" id="tab-terrain" aria-controls="vue-terrain" aria-selected="false" tabindex="-1">Terrain</button>
+</nav>
+
+<main>
+
+  <section id="vue-inclinaison" role="tabpanel" aria-labelledby="tab-inclinaison" tabindex="0">
+    <div class="lecture">
+      <figure class="plan" id="plan-inclinaison"></figure>
+    <p class="verdict" id="verdict-inclinaison"></p>
+    <figure class="plan plan-courbe" id="courbe-perte"></figure>
+    <p class="legende" id="legende-plage"></p>
+    </div>
+
+    <div class="reglages">
+    <div class="champ">
+      <label for="inclinaison-p">Inclinaison du plan <output id="inclinaison-p-val" for="inclinaison-p"></output></label>
+      <input type="range" id="inclinaison-p" min="0" max="90" step="1" value="30">
+    </div>
+    <div class="champ">
+      <label for="azimut-p">Orientation <output id="azimut-p-val" for="azimut-p"></output></label>
+      <input type="range" id="azimut-p" min="-90" max="90" step="5" value="0">
+      <div class="reperes"><span>Est</span><span>Sud-Est</span><span>Sud</span><span>Sud-Ouest</span><span>Ouest</span></div>
+    </div>
+    <div class="champ">
+      <span class="label">Période visée</span>
+      <div class="choix" id="saison" role="radiogroup" aria-label="Période visée"></div>
+    </div>
+    </div>
+  </section>
+
+  <section id="vue-rangees" role="tabpanel" aria-labelledby="tab-rangees" tabindex="0" hidden>
+    <div class="lecture">
+      <figure class="plan" id="plan-rangees"></figure>
+    <p class="verdict" id="verdict-rangees"></p>
+    <dl class="chiffres" id="chiffres-rangees"></dl>
+    </div>
+
+    <div class="reglages">
+    <div class="champ">
+      <span class="label">Longueur du panneau dans la pente</span>
+      <div class="choix" id="longueur-choix" role="radiogroup" aria-label="Longueur du panneau"></div>
+      <input type="number" id="longueur" min="0.5" max="8" step="0.01" inputmode="decimal" class="saisie">
+    </div>
+    <div class="champ">
+      <label for="inclinaison-r">Inclinaison des tables <output id="inclinaison-r-val" for="inclinaison-r"></output></label>
+      <input type="range" id="inclinaison-r" min="1" max="60" step="1" value="25">
+    </div>
+    <div class="champ">
+      <label for="azimut-r">Orientation du champ <output id="azimut-r-val" for="azimut-r"></output></label>
+      <input type="range" id="azimut-r" min="-90" max="90" step="5" value="0">
+    </div>
+    <div class="champ">
+      <label for="critere">Sans ombre jusqu'à</label>
+      <select id="critere"></select>
+      <p class="aide">C'est le choix le plus lourd du calcul : passer de midi seul à 9 h - 15 h peut doubler l'écartement.</p>
+    </div>
+    </div>
+  </section>
+
+  <section id="vue-terrain" role="tabpanel" aria-labelledby="tab-terrain" tabindex="0" hidden>
+    <div class="lecture">
+      <figure class="plan" id="plan-terrain"></figure>
+    <p class="verdict" id="verdict-terrain"></p>
+    <div class="paliers" id="paliers"></div>
+    </div>
+
+    <div class="reglages">
+    <div class="champ">
+      <label for="profondeur">Profondeur disponible <output id="profondeur-val" for="profondeur"></output></label>
+      <input type="range" id="profondeur" min="5" max="120" step="1" value="20">
+    </div>
+    <div class="champ">
+      <label for="inclinaison-t">Inclinaison des tables <output id="inclinaison-t-val" for="inclinaison-t"></output></label>
+      <input type="range" id="inclinaison-t" min="10" max="60" step="1" value="20">
+    </div>
+    <p class="aide">Longueur de panneau, orientation et critère d'ombrage sont repris de l'onglet Rangées.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pied">
+  <p>Modèle de ciel calé sur les irradiations PVGIS : inclinaison optimale à 3° près, gain d'inclinaison à 2 % près. Pour un chiffrage de production, repasser par PVGIS.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "SolarDim — Panel Optimizer",
-  "short_name": "SolarDim Panel",
+  "short_name": "Panel Optimizer",
   "description": "Outil satellite SolarDim pour optimiser l’inclinaison et la distance entre rangées photovoltaïques. Fonctionne hors connexion.",
   "lang": "fr",
   "dir": "ltr",

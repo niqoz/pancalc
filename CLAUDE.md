@@ -34,6 +34,20 @@ photovoltaïque. Voir `README.md` pour le modèle et ses limites.
   les optimiser tous les trois ensemble les envoie aux bornes du domaine sans
   gain réel. Les valeurs actuelles sont un compromis assumé.
 
+## Structure d'une vue
+
+Chaque onglet se découpe en trois blocs, enfants directs de la `section` :
+`.apercu` (schéma + verdict), `.details` (courbe, tableau ou paliers) et
+`.reglages` (les champs). L'aperçu doit rester enfant direct de la section :
+sur téléphone il est `sticky`, et un `sticky` cesse de suivre dès que son
+parent sort de l'écran — l'envelopper avec les seuls résultats le décrocherait
+au moment précis où l'on atteint les curseurs.
+
+Les curseurs ne répondent qu'à une prise sur leur poignée, et seulement au
+doigt (`curseur.js`) : sur un chantier, un appui sur la piste pendant un
+défilement modifiait un réglage sans qu'on le voie. À la souris, le clic sur
+la piste reste actif.
+
 ## Vérification visuelle
 
 L'extension Chrome n'était pas connectée ; les captures se font en headless :

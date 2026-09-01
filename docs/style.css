@@ -102,6 +102,21 @@ body {
 main { padding: 0 var(--gouttiere) 24px; }
 main > section { max-width: 620px; margin: 0 auto; }
 
+/* Sur telephone, l'apercu reste colle sous les onglets pendant qu'on
+   descend vers les curseurs : regler une inclinaison sans voir ce qu'elle
+   donne oblige a faire l'aller-retour a chaque degre. Le schema et son
+   verdict suffisent ; la courbe et les tableaux, eux, defilent.
+   Ecarte sur les ecrans courts, ou l'apercu ne laisserait plus de place. */
+@media (max-width: 899px) and (min-height: 620px) {
+  .apercu {
+    position: sticky; top: 50px; z-index: 4;
+    background: var(--papier);
+    padding-bottom: 10px;
+    box-shadow: 0 8px 10px -8px rgba(15, 23, 30, 0.18);
+  }
+  .apercu .plan { margin-top: 10px; }
+}
+
 /* Colonne gauche : ce que l'on lit. Colonne droite : ce que l'on regle. */
 @media (min-width: 900px) {
   main > section {
@@ -109,6 +124,8 @@ main > section { max-width: 620px; margin: 0 auto; }
     display: grid; grid-template-columns: 1.15fr 1fr;
     column-gap: 40px; align-items: start;
   }
+  .apercu, .details { grid-column: 1; }
+  .reglages { grid-column: 2; grid-row: 1 / span 2; }
   .reglages > .champ:first-child { margin-top: 18px; }
 }
 
@@ -240,6 +257,9 @@ select, .saisie {
 input[type="range"] {
   -webkit-appearance: none; appearance: none;
   width: 100%; height: 44px; margin: 0; background: none; cursor: pointer;
+  /* Le geste vertical revient au defilement de la page ; seul l'horizontal
+     atteint le curseur. */
+  touch-action: pan-y;
 }
 input[type="range"]::-webkit-slider-runnable-track {
   height: 8px; background: var(--trait); border-radius: 4px;

@@ -5,6 +5,7 @@
 import { CLIMATES, SEASONS, tiltAnalysis, tiltSweep } from "./solar.js";
 import { CRITERIA, rowLayout, fieldYield, rowSteps, shadeFreeWindow, MIN_TILT } from "./layout.js";
 import { CITIES, nearestCity } from "./sites.js";
+import { limiterALaPoignee } from "./curseur.js";
 import { drawTilt, drawRows, drawField, drawLossCurve, m, mc, deg, pct, hm, pl } from "./draw.js";
 
 /** Puissance crêtes des modules courants, par mètre carre de module.
@@ -158,6 +159,7 @@ function rendre() {
 function curseur(id, cle, format, apres) {
   const el = $(id), out = $(`${id}-val`);
   el.value = etat[cle];
+  limiterALaPoignee(el);
   const maj = () => { if (out) out.textContent = format(Number(el.value)); };
   maj();
   el.addEventListener("input", () => {

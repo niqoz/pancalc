@@ -47,14 +47,15 @@ Pour un chiffrage de production, repasser par PVGIS.
 ## Développement
 
 ```sh
-npm test                        # 40 tests, sans dépendance
+npm test                        # 45 tests, sans dépendance
 python3 -m http.server -d docs  # les modules ES exigent http://, pas file://
 ```
 
 `docs/` contient l'application livrée : `solar.js` (position du soleil et
 irradiation), `layout.js` (géométrie des rangées), `draw.js` (schémas SVG),
-`sites.js` (repères géographiques), `app.js` (assemblage). Les tests couvrent
-la physique et la géométrie, pas l'interface.
+`sites.js` (repères géographiques), `curseur.js` (prise des curseurs au
+doigt), `app.js` (assemblage). Les tests couvrent la physique, la géométrie
+et les calculs de l'interface, pas son rendu.
 
 Après toute modification de `docs/`, incrémenter `CACHE` dans `docs/sw.js`,
 sinon les appareils déjà équipés gardent l'ancienne version.

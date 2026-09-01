@@ -27,7 +27,7 @@ qu'on se place juste sous une marche plutôt que juste au-dessus.
 La géométrie (position du soleil, ombres portées, calepinage) est exacte. Le
 modèle d'irradiation, lui, est approché, et volontairement simple :
 
-1. quatre zones climatiques françaises, décrites par douze indices de clarté
+1. cinq zones climatiques françaises, décrites par douze indices de clarté
    mensuels calés sur les irradiations PVGIS ;
 2. chaque mois décomposé en journées types — claire (modèle de ciel clair de
    Hottel), voilée, couverte — pondérées pour redonner exactement
@@ -47,7 +47,7 @@ Pour un chiffrage de production, repasser par PVGIS.
 ## Développement
 
 ```sh
-npm test                        # 35 tests, sans dépendance
+npm test                        # 40 tests, sans dépendance
 python3 -m http.server -d docs  # les modules ES exigent http://, pas file://
 ```
 

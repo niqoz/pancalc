@@ -3,7 +3,12 @@
 
 /** Villes de référence : nom, latitude, longitude, zone climatique. */
 export const CITIES = [
+  ["Porto-Vecchio", 41.59, 9.28, "mediterraneen"],
   ["Ajaccio", 41.93, 8.74, "mediterraneen"],
+  ["Aléria", 42.11, 9.51, "mediterraneen"],
+  ["Corte", 42.31, 9.15, "mediterraneen"],
+  ["Cervione", 42.33, 9.49, "mediterraneen"],
+  ["Bastia", 42.70, 9.45, "mediterraneen"],
   ["Perpignan", 42.70, 2.90, "mediterraneen"],
   ["Nice", 43.70, 7.27, "mediterraneen"],
   ["Marseille", 43.30, 5.37, "mediterraneen"],
@@ -28,19 +33,14 @@ export const CITIES = [
   ["Lille", 50.63, 3.06, "oceanique"]
 ];
 
-/** Zone climatique la plus probable pour des coordonnées données.
-    Découpage volontairement grossier : il place le curseur au bon endroit
-    pour démarrer, l'utilisateur reste libre de corriger d'un geste. */
-export function zoneFromCoords(lat, lon) {
-  if (lat < 44.3 && lon > 3.2) return "mediterraneen";
-  if (lat > 48.9 && lon > 0.8 && lon < 4.6) return "oceanique";
-  if (lon < -0.5 && lat > 45.5) return "atlantique";
-  if (lat < 45.9) return "sudouest";
-  if (lon > 3.4) return "continental";
-  return lat > 47.6 ? "atlantique" : "continental";
-}
+/** Repère le plus proche de coordonnées données : son nom, sa distance en
+    kilomètres, et sa zone climatique.
 
-/** Ville de référence la plus proche, pour nommer une position relevée. */
+    La zone est celle du repère le plus proche, et non le résultat d'un
+    découpage géographique séparé : une seule source de vérité, celle du
+    tableau ci-dessus, évite de voir les deux diverger. Le relevé place le
+    curseur au bon endroit pour démarrer, l'utilisateur reste libre de
+    corriger la zone d'un geste. */
 export function nearestCity(lat, lon) {
   let best = CITIES[0], bestD = Infinity;
   for (const c of CITIES) {
@@ -48,5 +48,5 @@ export function nearestCity(lat, lon) {
     const d = dx * dx + dy * dy;
     if (d < bestD) { bestD = d; best = c; }
   }
-  return { name: best[0], km: Math.round(Math.sqrt(bestD) * 111) };
+  return { name: best[0], km: Math.round(Math.sqrt(bestD) * 111), zone: best[3] };
 }

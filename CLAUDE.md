@@ -26,6 +26,10 @@ photovoltaïque. Voir `README.md` pour le modèle et ses limites.
   !important}` de `style.css`.
 - **Ancres d'onglet** : elles ne doivent correspondre à aucun `id` de champ,
   sinon le navigateur fait défiler la page à l'ouverture du lien.
+- **Zone climatique** : elle est celle du repère le plus proche dans
+  `sites.js`, et non un découpage géographique séparé. Une heuristique lat/lon
+  avait été écrite en parallèle du tableau : les deux divergeaient sur six
+  villes. Une seule source de vérité, le tableau.
 - Les paramètres du modèle de ciel (`TUNING` dans `solar.js`) sont dégénérés :
   les optimiser tous les trois ensemble les envoie aux bornes du domaine sans
   gain réel. Les valeurs actuelles sont un compromis assumé.

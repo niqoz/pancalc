@@ -4,25 +4,28 @@
 
 import { CLIMATES, SEASONS, tiltAnalysis, tiltSweep } from "./solar.js";
 import { CRITERIA, rowLayout, fieldYield, rowSteps, shadeFreeWindow, MIN_TILT } from "./layout.js";
-import { CITIES, zoneFromCoords, nearestCity } from "./sites.js";
+import { CITIES, nearestCity } from "./sites.js";
 import { drawTilt, drawRows, drawField, drawLossCurve, m, mc, deg, pct, hm, pl } from "./draw.js";
 
 /** Puissance crêtes des modules courants, par mètre carre de module.
     Sert uniquement a convertir une surface en puissance installable. */
 const WC_PAR_M2 = 210;
 
-/** Longueurs de panneau usuelles, mesurées dans le sens de la pente. */
+/** Longueurs de panneau usuelles, mesurées dans le sens de la pente.
+    Les modules courants font 113 cm de large pour 196 ou 228 cm de long :
+    posés en paysage c'est la largeur qui se trouve dans la pente, en
+    portrait c'est la longueur. */
 const LONGUEURS = [
   [1.13, "paysage"],
-  [1.72, "portrait"],
-  [2.28, "grand format"],
-  [3.45, "2 en portrait"]
+  [1.96, "portrait"],
+  [2.28, "portrait long"],
+  [3.92, "2 en portrait"]
 ];
 
 const defauts = {
   lat: 45.8, climat: "sudouest", ville: "Lyon",
   tilt: 30, azimut: 0, saison: "annee",
-  longueur: 1.72, tiltR: 25, azimutR: 0, critere: "solstice_6h",
+  longueur: 1.96, tiltR: 25, azimutR: 0, critere: "solstice_6h",
   profondeur: 20, tiltT: 20
 };
 
@@ -205,9 +208,10 @@ function initSite() {
     bouton.setAttribute("aria-expanded", ouvert);
   });
 
-  remplirSelect($("ville"), CITIES.map((c) => [c[0], c[0]]), etat.ville);
+  majVilles();
   $("ville").addEventListener("change", (e) => {
     const c = CITIES.find((x) => x[0] === e.target.value);
+    if (!c) return; // entrée « position relevée », rien à recharger
     etat.ville = c[0]; etat.lat = c[1]; etat.climat = c[3];
     $("latitude").value = etat.lat;
     $("latitude-val").textContent = `${etat.lat.toFixed(1).replace(".", ",")}°`;
@@ -227,16 +231,21 @@ function initSite() {
     etatEl.textContent = "Relevé en cours…";
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        etat.lat = Math.round(coords.latitude * 10) / 10;
-        etat.climat = zoneFromCoords(coords.latitude, coords.longitude);
+        // Nommer un repère situé à 70 km induit en erreur : au-delà de
+        // 25 km on s'en tient à la position, la latitude et la zone suffisent.
         const proche = nearestCity(coords.latitude, coords.longitude);
-        etat.ville = proche.km < 12 ? proche.name : `Près de ${proche.name}`;
+        etat.lat = Math.round(coords.latitude * 10) / 10;
+        etat.climat = proche.zone;
+        etat.ville = proche.km <= 8 ? proche.name
+          : proche.km <= 25 ? `Près de ${proche.name}` : "Ma position";
         $("latitude").value = etat.lat;
         $("latitude-val").textContent = `${etat.lat.toFixed(1).replace(".", ",")}°`;
         $("climat").value = etat.climat;
-        $("ville").value = CITIES.some((c) => c[0] === etat.ville) ? etat.ville : CITIES[0][0];
+        majVilles();
         majAideClimat();
-        etatEl.textContent = `Position relevée, à ${proche.km} km de ${proche.name}. Vérifie la zone climatique.`;
+        etatEl.textContent = proche.km <= 25
+          ? `Position relevée, à ${proche.km} km de ${proche.name}. Vérifie la zone climatique.`
+          : "Position relevée. Aucun repère à moins de 25 km : vérifie la zone climatique.";
         rendre();
       },
       () => { etatEl.textContent = "Position refusée ou indisponible. Choisis une ville."; },
@@ -246,6 +255,16 @@ function initSite() {
 }
 
 const majAideClimat = () => { $("climat-aide").textContent = CLIMATES[etat.climat].hint; };
+
+/** Menu des villes. Une position relevée qui ne tombe sur aucun repère y
+    figure en tête, plutôt que de laisser le menu afficher une ville sans
+    rapport avec l'endroit où l'on se trouve. */
+function majVilles() {
+  const connue = CITIES.some((c) => c[0] === etat.ville);
+  const entrees = CITIES.map((c) => [c[0], c[0]]);
+  if (!connue) entrees.unshift(["", etat.ville]);
+  remplirSelect($("ville"), entrees, connue ? etat.ville : "");
+}
 
 function initCommandes() {
   curseur("inclinaison-p", "tilt", deg);

@@ -7,6 +7,7 @@ import { CRITERIA, rowLayout, shadeFreeWindow } from "./layout.js";
 import { CITIES, nearestCity } from "./sites.js";
 import { limiterALaPoignee } from "./curseur.js";
 import { initInstallation } from "./installer.js";
+import { initMiseAJour } from "./maj.js";
 import { drawTilt, drawRows, drawLossCurve, m, deg, pct, hm } from "./draw.js";
 
 /** Longueurs de panneau usuelles, mesurées dans le sens de la pente.
@@ -277,6 +278,4 @@ initInstallation({
   bouton: $("installer-bouton")
 });
 
-if ("serviceWorker" in navigator) {
-  addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => { /* hors ligne */ }));
-}
+addEventListener("load", initMiseAJour);

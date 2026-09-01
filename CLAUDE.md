@@ -12,8 +12,9 @@ modèle et ses limites.
   tiers sont versionnés dans `docs/vendor/`, jamais récupérés au build.
 - Commentaires et libellés en français accentué. Les identifiants de code
   restent sans accents (`etat`, `critere`, `rangees`) : ne pas les « corriger ».
-- Après toute modification de `docs/`, incrémenter `CACHE` dans `docs/sw.js`.
-  Un test vérifie que la liste `ASSETS` couvre bien tous les fichiers livrés.
+- Un test vérifie que la liste `ASSETS` de `docs/sw.js` couvre bien tous les
+  fichiers livrés. Incrémenter `CACHE` n'est plus nécessaire pour diffuser une
+  mise à jour, seulement pour évincer des fichiers retirés.
 
 ## Habillage
 
@@ -92,6 +93,24 @@ distingue — et tous les navigateurs iOS portent « Safari » dans la leur.
 
 Le bloc reste caché tant qu'aucune installation n'est possible : mieux vaut
 ne rien afficher que promettre ce que le navigateur ne fera pas.
+
+## Mise à jour d'une application installée
+
+Une application lancée depuis l'écran d'accueil n'est jamais rechargée : elle
+est mise en veille puis reprise, et le tirer-pour-rafraîchir n'existe pas en
+mode autonome. Un service worker « cache d'abord » sert alors indéfiniment la
+version qu'il a mise de côté — c'est le symptôme qui a été signalé.
+
+Deux pièces y répondent : `sw.js` sert le cache puis le rafraîchit derrière,
+et `maj.js` appelle `update()` au démarrage, à chaque retour au premier plan
+et au retour du réseau, puis recharge la page quand le nouveau service worker
+prend la main. Le rechargement est sans risque, les réglages étant enregistrés
+à chaque modification. Attention au premier lancement : il n'y a alors aucun
+contrôleur, et la prise de contrôle initiale ne doit pas déclencher de
+rechargement.
+
+`tests/navigateur/mise-a-jour.sh` rejoue le scénario complet. Il a été vérifié
+qu'il échoue bien avec l'ancien service worker.
 
 ## Essais en navigateur
 

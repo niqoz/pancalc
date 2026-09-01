@@ -51,6 +51,7 @@ Pour un chiffrage de production, repasser par PVGIS.
 ```sh
 npm test                          # 38 tests, sans dépendance
 ./tests/navigateur/lancer.sh      # essais nécessitant un vrai navigateur
+./tests/navigateur/mise-a-jour.sh # une app installée reçoit-elle les mises à jour
 python3 -m http.server -d docs    # les modules ES exigent http://, pas file://
 ```
 
@@ -65,8 +66,12 @@ irradiation), `layout.js` (géométrie des rangées), `draw.js` (schémas SVG),
 doigt), `installer.js` (invite d'installation), `app.js` (assemblage). Les tests couvrent la physique, la géométrie
 et les calculs de l'interface, pas son rendu.
 
-Après toute modification de `docs/`, incrémenter `CACHE` dans `docs/sw.js`,
-sinon les appareils déjà équipés gardent l'ancienne version.
+Une application installée se met à jour d'elle-même : le service worker sert
+son cache puis le rafraîchit derrière, et la page réinterroge le serveur au
+démarrage et à chaque retour au premier plan. La version suivante s'applique
+donc à l'ouverture d'après. Incrémenter `CACHE` dans `docs/sw.js` reste utile
+pour évincer d'un coup des fichiers retirés, mais n'est plus nécessaire à la
+diffusion.
 
 `outils-icones.py` régénère les deux icônes ; il n'est pas nécessaire au
 fonctionnement.

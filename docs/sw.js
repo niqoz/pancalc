@@ -1,19 +1,26 @@
 /* Service worker — pancalc.
-   L'application est entièrement hors ligne : aucun appel réseau au calcul.
-   Incrémenter CACHE a chaque modification de docs/, sinon les appareils
-   déjà équipes gardent l'ancienne version. */
-const CACHE = "pancalc-v10";
+
+   L'application doit marcher sans réseau sur un chantier, et se mettre à
+   jour toute seule dès qu'il y en a. Les deux exigences se concilient par
+   une stratégie « servir le cache, rafraîchir derrière » : la réponse part
+   immédiatement du cache, et la version du réseau, quand elle arrive, y
+   prend sa place pour le lancement suivant.
+
+   Incrémenter CACHE purge tout d'un coup ; ce n'est plus indispensable à la
+   diffusion d'une mise à jour, seulement à l'éviction de fichiers retirés. */
+const CACHE = "pancalc-v11";
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
   "./app.js",
   "./draw.js",
-  "./curseur.js",
-  "./installer.js",
   "./solar.js",
   "./layout.js",
   "./sites.js",
+  "./curseur.js",
+  "./installer.js",
+  "./maj.js",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
@@ -33,9 +40,20 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Cache d'abord : les ressources sont figées, et le chantier n'a pas toujours
-// de réseau. La mise a jour passe par le changement de nom du cache.
 self.addEventListener("fetch", (e) => {
-  if (e.request.method !== "GET") return;
-  e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request)));
+  const url = new URL(e.request.url);
+  if (e.request.method !== "GET" || url.origin !== location.origin) return;
+
+  e.respondWith(caches.open(CACHE).then(async (cache) => {
+    const enCache = await cache.match(e.request);
+    // La requête réseau part dans tous les cas : c'est elle qui apportera la
+    // version suivante, même quand la réponse servie vient du cache.
+    const surLeReseau = fetch(e.request)
+      .then((reponse) => {
+        if (reponse && reponse.ok) cache.put(e.request, reponse.clone());
+        return reponse;
+      })
+      .catch(() => null);
+    return enCache || surLeReseau.then((r) => r || new Response("", { status: 504 }));
+  }));
 });

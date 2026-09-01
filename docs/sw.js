@@ -2,7 +2,7 @@
    L'application est entièrement hors ligne : aucun appel réseau au calcul.
    Incrémenter CACHE a chaque modification de docs/, sinon les appareils
    déjà équipes gardent l'ancienne version. */
-const CACHE = "pancalc-v8";
+const CACHE = "pancalc-v9";
 const ASSETS = [
   "./",
   "./index.html",
@@ -10,6 +10,7 @@ const ASSETS = [
   "./app.js",
   "./draw.js",
   "./curseur.js",
+  "./installer.js",
   "./solar.js",
   "./layout.js",
   "./sites.js",

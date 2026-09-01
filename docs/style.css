@@ -385,6 +385,24 @@ input[type="range"]:focus-visible { outline: 2px solid var(--terracotta); outlin
 }
 .pied p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--estompe); }
 
+/* Invite d'installation : présente mais jamais en travers du chemin, elle
+   vit en pied de page et disparaît dès que l'application est installée. */
+.installer {
+  margin: 0 0 18px; padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--bordure); border-radius: var(--rayon);
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.installer p { margin: 0; flex: 1 1 12rem; font-size: 15px; color: var(--encre); }
+.installer button {
+  min-height: 46px; padding: 0 18px;
+  background: var(--terracotta); color: #fff;
+  border: none; border-radius: var(--rayon);
+  font: inherit; font-size: 16px; font-weight: 500; cursor: pointer;
+}
+.installer button:hover { background: #a84a2e; }
+.installer button:disabled { opacity: 0.6; cursor: default; }
+
 @media (prefers-reduced-motion: no-preference) {
   .p-panneau, .p-soleil, .p-courbe { transition: all 90ms linear; }
 }

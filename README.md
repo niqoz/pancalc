@@ -62,7 +62,7 @@ sombre compris.
 `docs/` contient l'application livrée : `solar.js` (position du soleil et
 irradiation), `layout.js` (géométrie des rangées), `draw.js` (schémas SVG),
 `sites.js` (repères géographiques), `curseur.js` (prise des curseurs au
-doigt), `app.js` (assemblage). Les tests couvrent la physique, la géométrie
+doigt), `installer.js` (invite d'installation), `app.js` (assemblage). Les tests couvrent la physique, la géométrie
 et les calculs de l'interface, pas son rendu.
 
 Après toute modification de `docs/`, incrémenter `CACHE` dans `docs/sw.js`,

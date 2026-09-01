@@ -81,6 +81,18 @@ Les champs sont numérotés dans l'ordre de réglage réel sur le terrain :
 l'orientation est une contrainte subie, elle vient toujours avant
 l'inclinaison, qui est ce que l'on choisit.
 
+## Invite d'installation
+
+`installer.js` propose un bouton là où le navigateur émet
+`beforeinstallprompt`, et décrit la manœuvre sur iOS, qui n'a pas d'API :
+seul Safari installe vraiment, les autres navigateurs iOS n'ont pas accès au
+moteur. Deux pièges de détection, couverts par les tests : iPadOS 13 et
+suivants envoient une signature de Mac — seul `maxTouchPoints` les en
+distingue — et tous les navigateurs iOS portent « Safari » dans la leur.
+
+Le bloc reste caché tant qu'aucune installation n'est possible : mieux vaut
+ne rien afficher que promettre ce que le navigateur ne fera pas.
+
 ## Essais en navigateur
 
 `tests/navigateur/lancer.sh` exécute `tests/navigateur/curseur.html` dans

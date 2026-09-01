@@ -6,6 +6,7 @@ import { CLIMATES, SEASONS, tiltAnalysis, tiltSweep } from "./solar.js";
 import { CRITERIA, rowLayout, shadeFreeWindow } from "./layout.js";
 import { CITIES, nearestCity } from "./sites.js";
 import { limiterALaPoignee } from "./curseur.js";
+import { initInstallation } from "./installer.js";
 import { drawTilt, drawRows, drawLossCurve, m, deg, pct, hm } from "./draw.js";
 
 /** Longueurs de panneau usuelles, mesurées dans le sens de la pente.
@@ -267,6 +268,12 @@ initSite();
 initCommandes();
 majAideClimat();
 rendre();
+
+initInstallation({
+  bloc: $("installer"),
+  texte: $("installer-texte"),
+  bouton: $("installer-bouton")
+});
 
 if ("serviceWorker" in navigator) {
   addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => { /* hors ligne */ }));

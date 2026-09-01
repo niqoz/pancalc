@@ -52,7 +52,7 @@ puis restaure la valeur, via un écouteur `input` posé sur le `document` en
 phase de capture, qui passe avant tout écouteur de l'application.
 
 L'orientation et l'inclinaison sont **une seule valeur** partagée par les
-trois onglets, pas une copie propagée : elles décrivent le même chantier. Un
+deux onglets, pas une copie propagée : elles décrivent le même chantier. Un
 même réglage est donc porté par plusieurs curseurs, que `rendre()` recale
 tous à chaque rendu ; leurs bornes `min` et `max` doivent rester identiques,
 sinon passer d'un onglet à l'autre tronquerait la valeur.
@@ -76,8 +76,12 @@ L'extension Chrome n'était pas connectée ; les captures se font en headless :
 python3 -m http.server 8931 -d docs &
 google-chrome --headless=new --disable-gpu --hide-scrollbars \
   --virtual-time-budget=4000 --window-size=390,1150 \
-  --screenshot=/tmp/vue.png "http://127.0.0.1:8931/#terrain"
+  --screenshot=/tmp/vue.png "http://127.0.0.1:8931/#rangees"
 ```
 
-Les ancres `#inclinaison`, `#rangees` et `#terrain` ouvrent directement un
-onglet, ce qui permet de capturer chaque vue sans clic.
+Les ancres `#inclinaison` et `#rangees` ouvrent directement un onglet, ce
+qui permet de capturer chaque vue sans clic.
+
+L'onglet « Terrain » (calepinage sur profondeur contrainte : `fieldSweep`,
+`rowSteps`, paliers de rangées) a été retiré à la demande de l'utilisateur.
+Son moteur et ses tests restent récupérables au commit `1349813`.

@@ -3,14 +3,10 @@
    les commandes aux schémas. */
 
 import { CLIMATES, SEASONS, tiltAnalysis, tiltSweep } from "./solar.js";
-import { CRITERIA, rowLayout, fieldYield, rowSteps, shadeFreeWindow } from "./layout.js";
+import { CRITERIA, rowLayout, shadeFreeWindow } from "./layout.js";
 import { CITIES, nearestCity } from "./sites.js";
 import { limiterALaPoignee } from "./curseur.js";
-import { drawTilt, drawRows, drawField, drawLossCurve, m, mc, deg, pct, hm, pl } from "./draw.js";
-
-/** Puissance crêtes des modules courants, par mètre carre de module.
-    Sert uniquement a convertir une surface en puissance installable. */
-const WC_PAR_M2 = 210;
+import { drawTilt, drawRows, drawLossCurve, m, deg, pct, hm } from "./draw.js";
 
 /** Longueurs de panneau usuelles, mesurées dans le sens de la pente.
     Les modules courants font 113 cm de large pour 196 ou 228 cm de long :
@@ -31,8 +27,7 @@ const LONGUEURS = [
 const defauts = {
   lat: 45.8, climat: "sudouest", ville: "Lyon",
   azimut: 0, tilt: 30, saison: "annee",
-  longueur: 1.96, critere: "solstice_6h",
-  profondeur: 20
+  longueur: 1.96, critere: "solstice_6h"
 };
 
 const CLE = "pancalc.reglages";
@@ -112,45 +107,10 @@ function rendreRangees() {
   ].map(([t, v]) => `<div><dt>${t}</dt><dd>${v}</dd></div>`).join("");
 }
 
-/* --- Vue 3 : terrain ------------------------------------------------------- */
-
-function rendreTerrain() {
-  const { lat, profondeur: p, longueur: L, tilt: t, azimut: az, critere: c, climat } = etat;
-  const f = fieldYield(lat, p, L, t, az, c, climat);
-  $("plan-terrain").innerHTML = drawField({ depth: p, length: L, tilt: t, field: f });
-
-  if (f.rows === 0) {
-    $("verdict-terrain").innerHTML =
-      `Aucune rangée ne tient sur <b>${mc(p)}</b> à ${deg(t)}. Aplatis les tables ou gagne du terrain.`;
-    $("paliers").innerHTML = "";
-    return;
-  }
-
-  const steps = rowSteps(lat, p, L, az, c, climat);
-  const meilleur = steps.reduce((a, b) => (b.total > a.total ? b : a));
-  const palier = steps.find((s) => t >= s.minTilt && t <= s.maxTilt);
-  const mwc = f.rows * L / p * WC_PAR_M2 * 10000 / 1e6;
-
-  const marge = palier && t < palier.maxTilt
-    ? ` Tu peux monter à ${deg(palier.maxTilt)} sans perdre de rangée.`
-    : palier ? ` Un degré de plus et tu tombes à ${palier.rows - 1} ${pl(palier.rows - 1, "rangée")}.` : "";
-  $("verdict-terrain").innerHTML =
-    `Sur <b>${mc(p)}</b> de profondeur, ${deg(t)} loge <b>${f.rows} ${pl(f.rows, "rangée")}</b>, `
-    + `soit <b>${mwc.toFixed(2).replace(".", ",")} MWc/ha</b>.${marge}`;
-
-  $("paliers").innerHTML = steps.map((s) => `
-    <div class="palier" data-actif="${s === palier ? "oui" : "non"}">
-      <b>${s.rows}</b><span>${pl(s.rows, "rangée")}</span>
-      <span>${s.minTilt === s.maxTilt ? `${s.minTilt}°` : `${s.minTilt}° à ${s.maxTilt}°`}${
-        s === meilleur ? " · meilleur" : ""}</span>
-      <em>${Math.round(s.total / meilleur.total * 100)} %</em>
-    </div>`).join("");
-}
-
 /* --- Orchestration --------------------------------------------------------- */
 
 let vue = "inclinaison";
-const rendus = { inclinaison: rendreInclinaison, rangees: rendreRangees, terrain: rendreTerrain };
+const rendus = { inclinaison: rendreInclinaison, rangees: rendreRangees };
 
 function rendre() {
   for (const recaler of curseurs) recaler();
@@ -300,8 +260,6 @@ function initCommandes() {
   remplirSelect($("critere"), Object.entries(CRITERIA).map(([k, v]) => [k, v.label]), etat.critere);
   $("critere").addEventListener("change", (e) => { etat.critere = e.target.value; rendre(); });
 
-  curseur("profondeur", "profondeur", mc);
-  curseur("inclinaison-t", "tilt", deg);
 }
 
 initOnglets();

@@ -1,7 +1,7 @@
 {
-  "name": "pancalc — inclinaison et calepinage photovoltaïque",
+  "name": "pancalc — inclinaison et distance entre rangées",
   "short_name": "pancalc",
-  "description": "Inclinaison optimale, distance entre rangées et calepinage sur terrain contraint. Fonctionne hors connexion.",
+  "description": "Inclinaison optimale et distance entre rangées pour le photovoltaïque. Fonctionne hors connexion.",
   "lang": "fr",
   "dir": "ltr",
   "id": "/pancalc/",

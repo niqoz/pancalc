@@ -1,8 +1,8 @@
 # pancalc
 
-Inclinaison, distance entre rangées et calepinage photovoltaïque, pour le
-chantier. Application web installable, **entièrement hors connexion** : aucun
-appel réseau n'est fait pendant le calcul.
+Inclinaison et distance entre rangées, pour le chantier photovoltaïque.
+Application web installable, **entièrement hors connexion** : aucun appel
+réseau n'est fait pendant le calcul.
 
 ## Ce que l'application répond
 
@@ -17,15 +17,10 @@ champ et d'un critère d'ombrage. Le critère est le paramètre le plus lourd du
 calcul : « 21 décembre à midi » et « 21 décembre de 9 h à 15 h » donnent des
 écartements du simple au double.
 
-L'orientation et l'inclinaison sont communes aux trois onglets : elles
+L'orientation et l'inclinaison sont communes aux deux onglets : elles
 décrivent un seul chantier. On règle l'inclinaison là où elle se lit le
 mieux, l'écartement des rangées suit, et la perte annuelle correspondante
 reste visible dans l'onglet Inclinaison.
-
-**Terrain** — le nombre de rangées tenant sur une profondeur donnée. La
-production ne varie pas continûment avec l'inclinaison : elle chute d'un coup
-dès qu'une rangée ne rentre plus. L'application affiche ces paliers, pour
-qu'on se place juste sous une marche plutôt que juste au-dessus.
 
 ## Modèle de calcul
 
@@ -52,7 +47,7 @@ Pour un chiffrage de production, repasser par PVGIS.
 ## Développement
 
 ```sh
-npm test                          # 45 tests, sans dépendance
+npm test                          # 38 tests, sans dépendance
 ./tests/navigateur/lancer.sh      # essais nécessitant un vrai navigateur
 python3 -m http.server -d docs    # les modules ES exigent http://, pas file://
 ```

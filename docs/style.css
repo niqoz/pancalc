@@ -212,19 +212,6 @@ main > section { max-width: 620px; margin: 0 auto; }
 }
 .chiffres dd { margin: 1px 0 0; font-size: 22px; font-weight: 700; }
 
-/* --- Paliers de rangees -------------------------------------------------- */
-
-.paliers { margin-top: 18px; display: flex; flex-direction: column; gap: 1px; }
-.palier {
-  display: flex; align-items: baseline; gap: 10px;
-  padding: 8px 12px; background: var(--surface);
-  border-left: 3px solid var(--trait);
-}
-.palier[data-actif="oui"] { border-left-color: var(--soleil); background: #fff5ed; }
-.palier b { font-size: 20px; font-weight: 700; min-width: 2.2em; }
-.palier span { font-size: 14px; color: var(--encre-2); }
-.palier em { margin-left: auto; font-style: normal; font-size: 15px; font-weight: 700; }
-
 /* --- Champs de saisie ---------------------------------------------------- */
 
 .champ { margin-top: 22px; }

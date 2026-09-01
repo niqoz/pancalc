@@ -9,11 +9,7 @@ const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
     angles. Afficher le millimètre serait une précision mensongère. */
 export const m = (v) => `${v.toFixed(2).replace(".", ",")} m`;
 export const deg = (v) => `${Math.round(v)}°`;
-/** Longueur sans decimales inutiles, pour les valeurs rondes. */
-export const mc = (v) => (Number.isInteger(v) ? `${v} m` : m(v));
 export const pct = (v) => `${v.toFixed(1).replace(".", ",")} %`;
-/** Accord en nombre : zero et un restent au singulier en français. */
-export const pl = (n, sing, plur = `${sing}s`) => (n > 1 ? plur : sing);
 export const hm = (h) => {
   const t = Math.round(h * 60), mn = t % 60;
   return `${Math.floor(t / 60)} h${mn ? ` ${String(mn).padStart(2, "0")}` : ""}`;
@@ -159,37 +155,6 @@ export function drawRows({ length, tilt, layout }) {
     ${dimH(hx, tx, sol + 24, m(layout.spacing), { tie: 20 })}
     ${dimH(x(1), x(2), sol + 50, m(layout.pitch), { tie: 46 })}
     ${scaleBar(40, H - 8, px, 130)}`);
-}
-
-/* --- Schéma 3 : terrain ---------------------------------------------------- */
-
-export function drawField({ depth, length, tilt, field }) {
-  const W = 360, marge = 24, HAUT_MAX = 132;
-  const a = tilt * Math.PI / 180;
-  // L'echelle est contrainte par la largeur ET par la hauteur : une table
-  // redressee sur un terrain court est haute par rapport a sa profondeur.
-  const px = Math.min((W - 2 * marge) / depth, HAUT_MAX / (length * Math.sin(a) || 1e-6));
-  const rise = length * Math.sin(a) * px, run = length * Math.cos(a) * px;
-  const sol = Math.max(38, rise + 16), H = sol + 64;
-  const rangs = Array.from({ length: field.rows }, (_, i) => {
-    const x = marge + i * field.pitch * px;
-    return `<line x1="${x}" y1="${sol}" x2="${x + run}" y2="${sol - rise}" class="p-panneau-fin"/>`;
-  }).join("");
-  const fin = marge + field.usedDepth * px;
-
-  return frame(W, H, `
-    <line x1="${marge}" y1="${sol}" x2="${W - marge}" y2="${sol}" class="p-sol"/>
-    <rect x="${marge}" y="${sol}" width="${W - 2 * marge}" height="12" fill="url(#sol)" stroke="none"/>
-    ${field.rows === 0
-      ? `<text x="${W / 2}" y="${sol - 26}" class="p-vide" text-anchor="middle">Aucune rangée ne tient</text>`
-      : rangs}
-    ${field.rows > 0 && depth - field.usedDepth > 0.2
-      ? `<rect x="${fin}" y="${sol - 10}" width="${(depth - field.usedDepth) * px}" height="10"
-               fill="url(#ombre)" stroke="none"/>` : ""}
-    ${field.rows > 0
-      ? dimH(marge, fin, sol + 28, `${field.rows} ${pl(field.rows, "rangée")} sur ${m(field.usedDepth)}`, { tie: 24 })
-      : ""}
-    ${dimH(marge, W - marge, sol + 56, `${mc(depth)} disponibles`, { tie: 52 })}`);
 }
 
 /* --- Courbe de perte ------------------------------------------------------- */

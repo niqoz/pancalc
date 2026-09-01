@@ -1,4 +1,4 @@
-/* Géométrie des rangées : écartement, emprise au sol, calepinage inverse.
+/* Géométrie des rangées : écartement et emprise au sol.
 
    Toutes les longueurs sont en mètres. Une "rangée" est une file de panneaux
    perpendiculaire a l'azimut du champ ; L est la longueur du panneau dans le
@@ -14,7 +14,7 @@
    des champs compacts ; 9 h - 15 h le même jour peut doubler l'écartement.
    C'est le choix le plus structurant de tout le calcul. */
 
-import { sunPosition, dayOfYear, toRad, sunriseHour, irradiation } from "./solar.js";
+import { sunPosition, dayOfYear, toRad, sunriseHour } from "./solar.js";
 
 /** Critères d'ombrage courants. `span` = demi-plage en heures autour du midi
     solaire ; 0 = midi seul. */
@@ -98,85 +98,4 @@ export function shadeFreeWindow(lat, length, tilt, fieldAzimuth, pitch, month, d
   }
   if (start === null) return null;
   return { start, end, hours: end - start };
-}
-
-/* --- Calepinage inverse : terrain contraint --------------------------------
-   Sur une profondeur donnée, augmenter l'inclinaison améliore le rendement
-   de chaque panneau mais espace les rangées, donc en réduit le nombre. Le
-   compromis se joue entre les deux et l'optimum est nettement plus plat que
-   l'optimum d'un panneau isole. */
-
-/** Nombre de rangées tenant sur une profondeur donnée. La dernière rangée
-    n'a besoin que de son emprise propre, pas d'un pas complet. */
-export function rowCount(depth, length, tilt, pitch) {
-  const run = panelRun(length, tilt);
-  if (depth < run) return 0;
-  return Math.floor((depth - run) / pitch) + 1;
-}
-
-/** Bilan d'un champ sur terrain contraint, ramené au mètre de largeur. */
-export function fieldYield(lat, depth, length, tilt, fieldAzimuth, criterion, climate, albedo = 0.2) {
-  const layout = rowLayout(lat, length, tilt, fieldAzimuth, criterion);
-  const rows = rowCount(depth, length, tilt, layout.pitch);
-  const perM2 = irradiation(lat, tilt, fieldAzimuth, climate, albedo);
-  const moduleArea = rows * length; // m² de module par mètre de largeur de terrain
-  return {
-    ...layout,
-    rows,
-    moduleArea,
-    perModuleM2: perM2,          // kWh/m² de module et par an
-    perGroundM2: moduleArea * perM2 / depth, // kWh par m² de terrain et par an
-    total: moduleArea * perM2,   // kWh par mètre de largeur et par an
-    usedDepth: rows > 0 ? (rows - 1) * layout.pitch + layout.run : 0
-  };
-}
-
-/** Inclinaison minimale retenue au sol. En dessous, la pluie ne rince plus
-    les modules : poussières, pollens et fientes s'accumulent en bas de vitre.
-    C'est une borne métier, pas une borne de calcul, mais elle est
-    indispensable : maximiser la seule production au mètre carre de terrain
-    conduirait sinon toujours a poser les modules a plat, puisque le gain de
-    rangées l'emporte sur la perte unitaire. */
-export const MIN_TILT = 10;
-
-/** Balayage d'inclinaison sous contrainte de profondeur de terrain.
-    Les deux optima répondent a deux questions différentes et ne coïncident
-    jamais : `best` maximise l'énergie récoltée sur le terrain disponible
-    (l'inclinaison est alors plate, on entasse les rangées), `bestPerModule`
-    maximise l'énergie de chaque module (c'est l'optimum du panneau seul, il
-    ignore le terrain). L'arbitrage entre les deux est économique : terrain
-    cher contre modules chers. L'application montre les deux courbes. */
-export function fieldSweep(lat, depth, length, fieldAzimuth, criterion, climate, albedo = 0.2, step = 1) {
-  const curve = [];
-  let best = null, bestPerModule = null;
-  for (let t = MIN_TILT; t <= 60; t += step) {
-    const f = fieldYield(lat, depth, length, t, fieldAzimuth, criterion, climate, albedo);
-    curve.push({ tilt: t, rows: f.rows, total: f.total, pitch: f.pitch, perModule: f.perModuleM2 });
-    if (f.rows > 0 && (!best || f.total > best.total)) best = { tilt: t, ...f };
-    if (!bestPerModule || f.perModuleM2 > bestPerModule.perModuleM2) bestPerModule = { tilt: t, ...f };
-  }
-  return { curve, best, bestPerModule };
-}
-
-/** Paliers de rangées : pour chaque nombre de rangées atteignable sur la
-    profondeur donnée, l'inclinaison maximale qui le préserve encore.
-    C'est l'information directement exploitable sur le terrain : la
-    production ne varie pas continûment avec l'inclinaison, elle chute d'un
-    coup des qu'une rangée ne rentre plus. Mieux vaut donc se placer juste
-    sous une marche que juste au-dessus. */
-export function rowSteps(lat, depth, length, fieldAzimuth, criterion, climate, albedo = 0.2) {
-  const { curve } = fieldSweep(lat, depth, length, fieldAzimuth, criterion, climate, albedo);
-  const steps = [];
-  for (const p of curve) {
-    if (p.rows === 0) continue;
-    const last = steps[steps.length - 1];
-    if (last && last.rows === p.rows) {
-      last.maxTilt = p.tilt;
-      last.total = p.total;
-      last.pitch = p.pitch;
-    } else {
-      steps.push({ rows: p.rows, minTilt: p.tilt, maxTilt: p.tilt, total: p.total, pitch: p.pitch });
-    }
-  }
-  return steps;
 }

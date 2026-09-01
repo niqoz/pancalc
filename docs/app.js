@@ -3,7 +3,7 @@
    les commandes aux schémas. */
 
 import { CLIMATES, SEASONS, tiltAnalysis, tiltSweep } from "./solar.js";
-import { CRITERIA, rowLayout, fieldYield, rowSteps, shadeFreeWindow, MIN_TILT } from "./layout.js";
+import { CRITERIA, rowLayout, fieldYield, rowSteps, shadeFreeWindow } from "./layout.js";
 import { CITIES, nearestCity } from "./sites.js";
 import { limiterALaPoignee } from "./curseur.js";
 import { drawTilt, drawRows, drawField, drawLossCurve, m, mc, deg, pct, hm, pl } from "./draw.js";
@@ -23,11 +23,16 @@ const LONGUEURS = [
   [3.92, "2 en portrait"]
 ];
 
+/* L'orientation et l'inclinaison décrivent un seul et même chantier : elles
+   sont communes aux trois onglets, et non recopiées de l'un à l'autre. On
+   règle l'inclinaison là où on la voit le mieux, l'écartement des rangées
+   suit, et la perte annuelle correspondante reste lisible dans l'onglet
+   Inclinaison. */
 const defauts = {
   lat: 45.8, climat: "sudouest", ville: "Lyon",
-  tilt: 30, azimut: 0, saison: "annee",
-  longueur: 1.96, tiltR: 25, azimutR: 0, critere: "solstice_6h",
-  profondeur: 20, tiltT: 20
+  azimut: 0, tilt: 30, saison: "annee",
+  longueur: 1.96, critere: "solstice_6h",
+  profondeur: 20
 };
 
 const CLE = "pancalc.reglages";
@@ -90,14 +95,14 @@ function rendreInclinaison() {
 /* --- Vue 2 : rangées ------------------------------------------------------- */
 
 function rendreRangees() {
-  const l = rowLayout(etat.lat, etat.longueur, etat.tiltR, etat.azimutR, etat.critere);
-  $("plan-rangees").innerHTML = drawRows({ length: etat.longueur, tilt: etat.tiltR, layout: l });
+  const l = rowLayout(etat.lat, etat.longueur, etat.tilt, etat.azimut, etat.critere);
+  $("plan-rangees").innerHTML = drawRows({ length: etat.longueur, tilt: etat.tilt, layout: l });
 
   $("verdict-rangees").innerHTML =
     `Laisse <b>${m(l.spacing)}</b> entre le haut d'une rangée et le pied de la suivante, `
     + `soit <b>${m(l.pitch)}</b> de pas.`;
 
-  const w = shadeFreeWindow(etat.lat, etat.longueur, etat.tiltR, etat.azimutR, l.pitch, 12, 21);
+  const w = shadeFreeWindow(etat.lat, etat.longueur, etat.tilt, etat.azimut, l.pitch, 12, 21);
   $("chiffres-rangees").innerHTML = [
     ["Hauteur de rangée", m(l.rise)],
     ["Emprise du panneau", m(l.run)],
@@ -110,7 +115,7 @@ function rendreRangees() {
 /* --- Vue 3 : terrain ------------------------------------------------------- */
 
 function rendreTerrain() {
-  const { lat, profondeur: p, longueur: L, tiltT: t, azimutR: az, critere: c, climat } = etat;
+  const { lat, profondeur: p, longueur: L, tilt: t, azimut: az, critere: c, climat } = etat;
   const f = fieldYield(lat, p, L, t, az, c, climat);
   $("plan-terrain").innerHTML = drawField({ depth: p, length: L, tilt: t, field: f });
 
@@ -148,6 +153,7 @@ let vue = "inclinaison";
 const rendus = { inclinaison: rendreInclinaison, rangees: rendreRangees, terrain: rendreTerrain };
 
 function rendre() {
+  for (const recaler of curseurs) recaler();
   $("site-libelle").textContent = etat.ville;
   $("site-detail").textContent =
     `${etat.lat.toFixed(1).replace(".", ",")}° N · ${CLIMATES[etat.climat].label}`;
@@ -155,19 +161,23 @@ function rendre() {
   sauver();
 }
 
-/** Curseur relie a une clé d'état, avec sa valeur affichée en direct. */
-function curseur(id, cle, format, apres) {
+/* Une même valeur est portée par plusieurs curseurs, un par onglet : chacun
+   doit se recaler quand un autre l'a modifiée. */
+const curseurs = [];
+
+/** Curseur relié à une clé d'état, avec sa valeur affichée en direct. */
+function curseur(id, cle, format) {
   const el = $(id), out = $(`${id}-val`);
-  el.value = etat[cle];
   limiterALaPoignee(el);
-  const maj = () => { if (out) out.textContent = format(Number(el.value)); };
-  maj();
+  const afficher = () => { if (out) out.textContent = format(Number(el.value)); };
+  const recaler = () => { el.value = etat[cle]; afficher(); };
+  curseurs.push(recaler);
   el.addEventListener("input", () => {
     etat[cle] = Number(el.value);
-    maj();
-    if (apres) apres();
+    afficher();
     rendre();
   });
+  recaler();
 }
 
 function initOnglets() {
@@ -285,14 +295,13 @@ function initCommandes() {
     etat.longueur, (v) => majLongueur(Number(v)));
   saisie.addEventListener("change", () => majLongueur(Number(saisie.value)));
 
-  curseur("inclinaison-r", "tiltR", deg);
-  curseur("azimut-r", "azimutR", (v) => `${deg(Math.abs(v))} ${nomAzimut(v)}`);
+  curseur("azimut-r", "azimut", (v) => `${deg(Math.abs(v))} ${nomAzimut(v)}`);
+  curseur("inclinaison-r", "tilt", deg);
   remplirSelect($("critere"), Object.entries(CRITERIA).map(([k, v]) => [k, v.label]), etat.critere);
   $("critere").addEventListener("change", (e) => { etat.critere = e.target.value; rendre(); });
 
   curseur("profondeur", "profondeur", mc);
-  curseur("inclinaison-t", "tiltT", deg);
-  $("inclinaison-t").min = MIN_TILT;
+  curseur("inclinaison-t", "tilt", deg);
 }
 
 initOnglets();

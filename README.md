@@ -17,6 +17,11 @@ champ et d'un critère d'ombrage. Le critère est le paramètre le plus lourd du
 calcul : « 21 décembre à midi » et « 21 décembre de 9 h à 15 h » donnent des
 écartements du simple au double.
 
+L'orientation et l'inclinaison sont communes aux trois onglets : elles
+décrivent un seul chantier. On règle l'inclinaison là où elle se lit le
+mieux, l'écartement des rangées suit, et la perte annuelle correspondante
+reste visible dans l'onglet Inclinaison.
+
 **Terrain** — le nombre de rangées tenant sur une profondeur donnée. La
 production ne varie pas continûment avec l'inclinaison : elle chute d'un coup
 dès qu'une rangée ne rentre plus. L'application affiche ces paliers, pour

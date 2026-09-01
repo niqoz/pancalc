@@ -51,6 +51,12 @@ portée de l'événement. Le mécanisme laisse donc le déplacement se produire
 puis restaure la valeur, via un écouteur `input` posé sur le `document` en
 phase de capture, qui passe avant tout écouteur de l'application.
 
+L'orientation et l'inclinaison sont **une seule valeur** partagée par les
+trois onglets, pas une copie propagée : elles décrivent le même chantier. Un
+même réglage est donc porté par plusieurs curseurs, que `rendre()` recale
+tous à chaque rendu ; leurs bornes `min` et `max` doivent rester identiques,
+sinon passer d'un onglet à l'autre tronquerait la valeur.
+
 Les champs sont numérotés dans l'ordre de réglage réel sur le terrain :
 l'orientation est une contrainte subie, elle vient toujours avant
 l'inclinaison, qui est ce que l'on choisit.

@@ -54,7 +54,7 @@ export function initInstallation({ bloc, texte, bouton }) {
   addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault(); // sinon le navigateur affiche sa propre bannière
     invite = e;
-    montrer("Garde pancalc sous la main, même sans réseau.", true);
+    montrer("Garde SolarDim Panel Optimizer sous la main, même sans réseau.", true);
   });
 
   bouton.addEventListener("click", async () => {

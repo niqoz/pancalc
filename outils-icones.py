@@ -1,36 +1,54 @@
 from PIL import Image, ImageDraw
-import math
 
 # Palette « Terrasse », la même que SolarDim (cf. docs/style.css).
-ENCRE, PAPIER, TERRACOTTA, ESTOMPE = (28, 20, 16), (250, 246, 239), (192, 88, 56), (138, 122, 101)
+PAPIER = (250, 246, 239)
+TERRACOTTA = (192, 88, 56)
+ESTOMPE = (138, 122, 101)
+SOLEIL = (233, 163, 44)
+ARDOISE = (90, 143, 176)
 
-def icone(taille, marge_ratio=0.0):
-    S = taille * 4  # rendu 4x puis reduction, pour lisser les obliques
-    im = Image.new("RGB", (S, S), ENCRE)
+def quadratique(p0, controle, p1, etapes=80):
+    points = []
+    for i in range(etapes + 1):
+        t = i / etapes
+        u = 1 - t
+        points.append((
+            u * u * p0[0] + 2 * u * t * controle[0] + t * t * p1[0],
+            u * u * p0[1] + 2 * u * t * controle[1] + t * t * p1[1],
+        ))
+    return points
+
+def icone(taille):
+    S = taille * 4  # rendu 4x puis réduction, pour lisser les obliques
+    im = Image.new("RGB", (S, S), PAPIER)
     d = ImageDraw.Draw(im)
     u = S / 100.0
-    sol_y = 68 * u
 
-    # Le sol, et sous lui la trame du terrain.
-    d.line([(14 * u, sol_y), (86 * u, sol_y)], fill=PAPIER, width=int(2.6 * u))
-    for x in range(16, 88, 7):
-        d.line([(x * u, sol_y + 2 * u), ((x - 6) * u, sol_y + 8 * u)], fill=ESTOMPE, width=int(1.4 * u))
+    def px(points):
+        return [(x * u, y * u) for x, y in points]
 
-    # Deux rangees inclinees a 35 degres, ecartees de leur juste pas : c'est
-    # cet ecartement que l'application calcule.
-    a = math.radians(35)
-    L, x1, x2 = 30, 14, 52
-    run, rise = L * math.cos(a), L * math.sin(a)
-    for x0, coul in ((x1, ESTOMPE), (x2, PAPIER)):
-        d.line([(x0 * u, sol_y), ((x0 + run) * u, sol_y - rise * u)], fill=coul, width=int(6.5 * u))
+    # Arc théorique puis course solaire, invariants du logo SolarDim.
+    d.arc((16 * u, 24 * u, 84 * u, 92 * u), 180, 360,
+          fill=ESTOMPE, width=max(1, int(2.4 * u)))
+    course = quadratique((22, 67), (50, 16), (78, 67))
+    d.line(px(course), fill=TERRACOTTA, width=max(1, int(5.2 * u)), joint="curve")
 
-    # Le rayon rasant : il effleure le haut d'une rangee et vient mourir au
-    # pied de la suivante. Prolonge vers l'amont pour se lire comme un rayon.
-    hx, hy = x1 + run, 68 - rise
-    dx, dy = x2 - hx, 68 - hy
-    k = 0.85
-    d.line([((hx - dx * k) * u, (hy - dy * k) * u), (x2 * u, sol_y)],
-           fill=TERRACOTTA, width=int(3.2 * u))
+    # L'horizon devient un panneau segmenté : le signe distinctif du satellite.
+    panneau = [(17, 69), (81, 60), (83, 70), (19, 79)]
+    d.polygon(px(panneau), fill=ARDOISE)
+    for x in (33, 49, 65):
+        d.line(px([(x, 66.8 - (x - 17) * 9 / 64),
+                   (x + 1.4, 76.8 - (x - 17) * 9 / 64)]),
+               fill=PAPIER, width=max(1, int(1.7 * u)))
+
+    # Soleil matinal sur la courbe, cerné de papier comme l'icône mère.
+    t = 0.33
+    x = (1 - t) ** 2 * 22 + 2 * (1 - t) * t * 50 + t ** 2 * 78
+    y = (1 - t) ** 2 * 67 + 2 * (1 - t) * t * 16 + t ** 2 * 67
+    r, bord = 7.2, 1.8
+    d.ellipse(((x - r - bord) * u, (y - r - bord) * u,
+               (x + r + bord) * u, (y + r + bord) * u), fill=PAPIER)
+    d.ellipse(((x - r) * u, (y - r) * u, (x + r) * u, (y + r) * u), fill=SOLEIL)
 
     return im.resize((taille, taille), Image.LANCZOS)
 

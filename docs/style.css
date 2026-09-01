@@ -1,5 +1,5 @@
-/* pancalc — palette « Terrasse », portée depuis SolarDim pour que les deux
-   applications se reconnaissent : beige papier, encre brune, terracotta en
+/* SolarDim Panel Optimizer — palette « Terrasse » de l'application mère :
+   beige papier, encre brune, terracotta en
    accent, Fraunces en titres et DM Sans en corps. La séparation se fait au
    trait, jamais à l'ombre, et les étiquettes passent en petites capitales
    monospacées. Les schémas gardent leur langage de plan d'exécution, mais
@@ -118,13 +118,28 @@ h1, .chiffre {
 /* --- Entête -------------------------------------------------------------- */
 
 .entete {
-  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
-  padding: 14px var(--gouttiere) 12px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 10px var(--gouttiere);
   background: var(--bandeau); color: var(--sur-bandeau);
 }
-.entete h1 {
-  margin: 0; font-size: 28px; font-weight: 600; line-height: 1.1;
-  letter-spacing: -0.015em;
+.marque {
+  display: flex; align-items: center; gap: 9px; margin: 0;
+  min-width: 0; line-height: 1;
+}
+.marque-symbole {
+  display: block; width: 58px; height: 42px; flex: 0 0 auto;
+}
+.marque-textes { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.marque-nom {
+  font-size: 27px; font-weight: 400; letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+.marque-nom strong { color: var(--terracotta); font-weight: 750; }
+.marque-produit {
+  color: var(--bandeau-estompe);
+  font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.19em;
+  line-height: 1; text-transform: uppercase; white-space: nowrap;
 }
 .site-resume {
   margin-left: auto; display: flex; flex-direction: column; align-items: flex-end;
@@ -137,6 +152,15 @@ h1, .chiffre {
 #site-detail {
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   font-size: 11px; letter-spacing: 0.06em; color: var(--bandeau-estompe);
+}
+
+@media (max-width: 430px) {
+  .entete { gap: 8px; }
+  .marque { gap: 6px; }
+  .marque-symbole { width: 48px; height: 35px; }
+  .marque-nom { font-size: 23px; }
+  .marque-produit { font-size: 7.5px; letter-spacing: 0.15em; }
+  .site-resume { padding-inline: 9px; }
 }
 
 /* --- Panneau de site ----------------------------------------------------- */

@@ -1,4 +1,4 @@
-/* Moteur solaire de pancalc.
+/* Moteur solaire de SolarDim Panel Optimizer.
    Convention d'azimut utilisée partout : 0 = plein sud, négatif vers l'est,
    positif vers l'ouest (même convention que PVGIS et que les fiches
    d'installateur françaises). Angles en degrés a l'interface, radians en

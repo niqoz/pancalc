@@ -1,6 +1,7 @@
-# pancalc
+# SolarDim — Panel Optimizer
 
-Inclinaison et distance entre rangées, pour le chantier photovoltaïque.
+Application satellite de SolarDim pour l'inclinaison et la distance entre
+rangées sur le chantier photovoltaïque.
 Application web installable, **entièrement hors connexion** : aucun appel
 réseau n'est fait pendant le calcul.
 
@@ -55,8 +56,8 @@ npm test                          # 38 tests, sans dépendance
 python3 -m http.server -d docs    # les modules ES exigent http://, pas file://
 ```
 
-L'habillage — palette « Terrasse », Fraunces en titres, DM Sans en corps —
-est repris de SolarDim, pour que les deux applications se reconnaissent. Les
+L'identité — emblème solaire et panneau, palette « Terrasse », Fraunces en
+titres, DM Sans en corps — prolonge celle de SolarDim. Les
 variables de `:root` dans `style.css` sont celles de `solardim-site`, mode
 sombre compris.
 

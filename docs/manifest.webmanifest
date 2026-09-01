@@ -1,7 +1,7 @@
 {
-  "name": "pancalc — inclinaison et distance entre rangées",
-  "short_name": "pancalc",
-  "description": "Inclinaison optimale et distance entre rangées pour le photovoltaïque. Fonctionne hors connexion.",
+  "name": "SolarDim — Panel Optimizer",
+  "short_name": "SolarDim Panel",
+  "description": "Outil satellite SolarDim pour optimiser l’inclinaison et la distance entre rangées photovoltaïques. Fonctionne hors connexion.",
   "lang": "fr",
   "dir": "ltr",
   "id": "/pancalc/",

@@ -1,8 +1,8 @@
-# pancalc — notes pour les sessions suivantes
+# SolarDim Panel Optimizer — notes pour les sessions suivantes
 
-Application web hors connexion de calcul d'inclinaison et de distance entre
-rangées. Deux onglets, Inclinaison et Rangées. Voir `README.md` pour le
-modèle et ses limites.
+Application satellite de SolarDim, utilisable hors connexion, pour calculer
+l'inclinaison et la distance entre rangées. Deux onglets, Inclinaison et
+Rangées. Voir `README.md` pour le modèle et ses limites.
 
 ## Conventions
 

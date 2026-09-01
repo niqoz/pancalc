@@ -1,4 +1,4 @@
-/* Service worker — pancalc.
+/* Service worker — SolarDim Panel Optimizer.
 
    L'application doit marcher sans réseau sur un chantier, et se mettre à
    jour toute seule dès qu'il y en a. Les deux exigences se concilient par
@@ -13,6 +13,7 @@ const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
+  "./brandmark-panel.svg",
   "./app.js",
   "./draw.js",
   "./solar.js",

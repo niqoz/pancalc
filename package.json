@@ -1,7 +1,7 @@
 {
-  "name": "pancalc",
+  "name": "solardim-panel-optimizer",
   "version": "1.0.0",
-  "description": "Calcul d'inclinaison et de distance entre rangees de panneaux solaires",
+  "description": "Application satellite SolarDim pour optimiser l'inclinaison et la distance entre rangees de panneaux solaires",
   "type": "module",
   "private": true,
   "scripts": {

@@ -57,13 +57,12 @@ le mode sombre suit alors sans retouche.
 ## Structure d'une vue
 
 Chaque onglet se découpe en trois blocs, enfants directs de la `section` :
-`.apercu` (schéma + verdict, précédés du choix de période dans Inclinaison et
-du choix du panneau dans Rangées), `.details` (courbe ou tableau de chiffres)
-et `.reglages` (les autres champs). L'aperçu doit rester enfant direct de la
-section : sur téléphone il est `sticky`, et un `sticky` cesse de suivre dès
-que son parent sort de
-l'écran — l'envelopper avec les seuls résultats le décrocherait au moment
-précis où l'on atteint les curseurs.
+`.apercu` (schéma + verdict, précédés du choix de période dans Inclinaison ;
+dans Rangées, il contient aussi le choix du panneau et les deux curseurs),
+`.details` (courbe ou tableau de chiffres) et `.reglages` (les autres champs).
+Dans Inclinaison seulement, l'aperçu reste `sticky` sur téléphone afin que le
+schéma accompagne les curseurs. Celui de Rangées doit au contraire défiler :
+ses curseurs sont placés directement sous le schéma dans `.reglages-directs`.
 
 Les curseurs ne répondent qu'à une prise sur leur poignée (`curseur.js`) :
 sur un chantier, un appui sur la piste pendant un défilement modifiait un

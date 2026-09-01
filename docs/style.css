@@ -206,6 +206,12 @@ main > section { max-width: 620px; margin: 0 auto; }
     padding-bottom: 10px;
     border-bottom: 1px solid var(--bordure);
   }
+  /* Le schéma Rangées fait partie du parcours de réglage : il défile avec
+     ses deux curseurs au lieu d'occuper durablement l'écran. */
+  #vue-rangees .apercu {
+    position: static; top: auto; z-index: auto;
+    padding-bottom: 0; border-bottom: 0;
+  }
   .apercu .plan { margin-top: 10px; }
 }
 
@@ -321,6 +327,8 @@ main > section { max-width: 620px; margin: 0 auto; }
 .champ { margin-top: 22px; }
 .champ-panneaux { margin-top: 14px; }
 .champ-panneaux #longueur-choix { margin-top: 10px; }
+.reglages-directs { margin-top: 14px; }
+.reglages-directs .champ:first-child { margin-top: 0; }
 .champ label, .champ .label {
   display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;
 }

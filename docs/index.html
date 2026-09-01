@@ -89,6 +89,18 @@
         <input type="number" id="longueur" min="0.5" max="8" step="0.01" inputmode="decimal" class="saisie" aria-label="Longueur personnalisée du panneau en mètres">
       </div>
       <figure class="plan" id="plan-rangees"></figure>
+      <div class="reglages-directs">
+        <div class="champ">
+          <label for="azimut-r">2 · Orientation du champ <output id="azimut-r-val" for="azimut-r"></output></label>
+          <input type="range" id="azimut-r" min="-90" max="90" step="5" value="0">
+          <div class="reperes"><span>Est</span><span>Sud-Est</span><span>Sud</span><span>Sud-Ouest</span><span>Ouest</span></div>
+        </div>
+        <div class="champ">
+          <label for="inclinaison-r">3 · Inclinaison des tables <output id="inclinaison-r-val" for="inclinaison-r"></output></label>
+          <input type="range" id="inclinaison-r" min="0" max="90" step="1" value="30">
+          <p class="aide">Orientation et inclinaison sont communes aux deux onglets. Les modifier ici mettra à jour la perte annuelle dans Inclinaison.</p>
+        </div>
+      </div>
       <p class="verdict" id="verdict-rangees"></p>
     </div>
 
@@ -97,16 +109,6 @@
     </div>
 
     <div class="reglages">
-      <div class="champ">
-        <label for="azimut-r">2 · Orientation du champ <output id="azimut-r-val" for="azimut-r"></output></label>
-        <input type="range" id="azimut-r" min="-90" max="90" step="5" value="0">
-        <div class="reperes"><span>Est</span><span>Sud-Est</span><span>Sud</span><span>Sud-Ouest</span><span>Ouest</span></div>
-      </div>
-      <div class="champ">
-        <label for="inclinaison-r">3 · Inclinaison des tables <output id="inclinaison-r-val" for="inclinaison-r"></output></label>
-        <input type="range" id="inclinaison-r" min="0" max="90" step="1" value="30">
-        <p class="aide">Orientation et inclinaison sont communes aux deux onglets. Les modifier ici mettra à jour la perte annuelle dans Inclinaison.</p>
-      </div>
       <div class="champ">
         <label for="critere">4 · Sans ombre jusqu'à</label>
         <select id="critere"></select>

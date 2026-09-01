@@ -27,7 +27,7 @@ function fichiers(dir = DOCS, prefixe = "") {
 }
 
 // sw.js ne se met pas lui-meme en cache, la licence n'est pas chargee par la page.
-const HORS_CACHE = new Set(["sw.js", "vendor/barlow/OFL.txt"]);
+const HORS_CACHE = new Set(["sw.js", "vendor/fonts/Fraunces-OFL.txt", "vendor/fonts/DMSans-OFL.txt"]);
 
 test("tout fichier livre est mis en cache pour le hors ligne", () => {
   const liste = new Set(assets());

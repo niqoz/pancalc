@@ -54,6 +54,11 @@ npm test                          # 38 tests, sans dépendance
 python3 -m http.server -d docs    # les modules ES exigent http://, pas file://
 ```
 
+L'habillage — palette « Terrasse », Fraunces en titres, DM Sans en corps —
+est repris de SolarDim, pour que les deux applications se reconnaissent. Les
+variables de `:root` dans `style.css` sont celles de `solardim-site`, mode
+sombre compris.
+
 `docs/` contient l'application livrée : `solar.js` (position du soleil et
 irradiation), `layout.js` (géométrie des rangées), `draw.js` (schémas SVG),
 `sites.js` (repères géographiques), `curseur.js` (prise des curseurs au
@@ -68,5 +73,5 @@ fonctionnement.
 
 ## Licence
 
-La police Barlow Semi Condensed (`docs/vendor/barlow/`) est sous licence SIL
-Open Font License 1.1, voir `docs/vendor/barlow/OFL.txt`.
+Les polices Fraunces et DM Sans (`docs/vendor/fonts/`) sont sous licence SIL
+Open Font License 1.1, voir les fichiers `OFL.txt` du même dossier.

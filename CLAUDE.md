@@ -15,6 +15,24 @@ modèle et ses limites.
 - Après toute modification de `docs/`, incrémenter `CACHE` dans `docs/sw.js`.
   Un test vérifie que la liste `ASSETS` couvre bien tous les fichiers livrés.
 
+## Habillage
+
+Palette « Terrasse » reprise de SolarDim (`~/Projets/solardim-site/index.html`
+pour les variables CSS, `SolairDimDroid/.../ui/theme/Color.kt` pour leur
+commentaire d'origine) : beige papier, encre brune, terracotta en accent,
+Fraunces en titres et valeurs chiffrées, DM Sans en corps, étiquettes en
+petites capitales monospacées. La séparation se fait au trait, jamais à
+l'ombre. Le mode sombre est porté à l'identique, avec les trois sélecteurs de
+la source : `:root`, le `@media` et `:root[data-theme="dark"]` — ce dernier
+sert aussi à vérifier le rendu sombre en capture.
+
+Fraunces est nettement plus large que la condensée employée auparavant :
+toute reprise des schémas doit revérifier que les cotes tiennent dans leur
+cadre.
+
+Les schémas prennent leurs couleurs des variables CSS, jamais de littéraux :
+le mode sombre suit alors sans retouche.
+
 ## Pièges déjà rencontrés
 
 - **Corrélation d'Erbs** : la forme horaire et la forme journalière diffèrent

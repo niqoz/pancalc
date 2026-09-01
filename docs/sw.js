@@ -2,7 +2,7 @@
    L'application est entièrement hors ligne : aucun appel réseau au calcul.
    Incrémenter CACHE a chaque modification de docs/, sinon les appareils
    déjà équipes gardent l'ancienne version. */
-const CACHE = "pancalc-v7";
+const CACHE = "pancalc-v8";
 const ASSETS = [
   "./",
   "./index.html",
@@ -16,8 +16,8 @@ const ASSETS = [
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
-  "./vendor/barlow/barlow-semicondensed-500.woff2",
-  "./vendor/barlow/barlow-semicondensed-700.woff2"
+  "./vendor/fonts/fraunces.woff2",
+  "./vendor/fonts/dm_sans.woff2"
 ];
 
 self.addEventListener("install", (e) => {

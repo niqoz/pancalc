@@ -1,123 +1,191 @@
-/* pancalc — direction visuelle : le tirage de plan d'execution.
-   Fond de papier gris-bleu froid, traits nets, cotes a halo, une seule
-   couleur chaude reservee au soleil et a la valeur active. Pas de mode
-   sombre : l'application se lit sur un chantier en plein jour, ou le fond
-   clair reste le plus lisible. */
+/* pancalc — palette « Terrasse », portée depuis SolarDim pour que les deux
+   applications se reconnaissent : beige papier, encre brune, terracotta en
+   accent, Fraunces en titres et DM Sans en corps. La séparation se fait au
+   trait, jamais à l'ombre, et les étiquettes passent en petites capitales
+   monospacées. Les schémas gardent leur langage de plan d'exécution, mais
+   avec les couleurs de la maison. */
 
 @font-face {
-  font-family: "Barlow Semi Condensed";
-  src: url("vendor/barlow/barlow-semicondensed-500.woff2") format("woff2");
-  font-weight: 500; font-style: normal; font-display: swap;
+  font-family: "Fraunces";
+  src: url("vendor/fonts/fraunces.woff2") format("woff2-variations"),
+       url("vendor/fonts/fraunces.woff2") format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: swap;
 }
 @font-face {
-  font-family: "Barlow Semi Condensed";
-  src: url("vendor/barlow/barlow-semicondensed-700.woff2") format("woff2");
-  font-weight: 700; font-style: normal; font-display: swap;
+  font-family: "DM Sans";
+  src: url("vendor/fonts/dm_sans.woff2") format("woff2-variations"),
+       url("vendor/fonts/dm_sans.woff2") format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: swap;
 }
 
 :root {
-  --papier: #edf1f4;
-  --surface: #fbfcfd;
-  --encre: #0f171e;
-  --encre-2: #52646f;
-  --trait: #bcc8d1;
-  --soleil: #d95d06;
-  --panneau: #12456f;
-  --sol: #8a9683;
-  --ombre: #a2afb8;
-  --rayon: 3px;
+  --papier: #faf6ef;
+  --surface: #ffffff;
+  --champ: #f2ece0;
+  --bordure: #e0d6c4;
+  --bordure-nette: #cfc0a6;
+  --encre: #1c1410;
+  --estompe: #8a7a65;
+  --terracotta: #c05838;
+  --sauge: #4a6e55;
+  --soleil: #e9a32c;
+  --ardoise: #5a8fb0;
+  --ombre: #8a7a65;
+  --bandeau: #1c1410;
+  --sur-bandeau: #faf6ef;
+  --bandeau-estompe: #a5927b;
+  --rayon: 4px;
   --gouttiere: 18px;
-  font-family: "Barlow Semi Condensed", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papier: #17120e;
+    --surface: #1f1811;
+    --champ: #241c15;
+    --bordure: #382e25;
+    --bordure-nette: #4c4034;
+    --encre: #f3eae0;
+    --estompe: #a5927b;
+    --terracotta: #e0915f;
+    --sauge: #86ae93;
+    --ardoise: #7fb3d1;
+    --ombre: #6b5c4a;
+    --bandeau: #241c15;
+    --sur-bandeau: #f3eae0;
+    --bandeau-estompe: #a5927b;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --papier: #17120e;
+  --surface: #1f1811;
+  --champ: #241c15;
+  --bordure: #382e25;
+  --bordure-nette: #4c4034;
+  --encre: #f3eae0;
+  --estompe: #a5927b;
+  --terracotta: #e0915f;
+  --sauge: #86ae93;
+  --ardoise: #7fb3d1;
+  --ombre: #6b5c4a;
+  --bandeau: #241c15;
+  --sur-bandeau: #f3eae0;
+  --bandeau-estompe: #a5927b;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 
-/* L'attribut hidden n'impose qu'un display:none de faible priorite, qu'une
-   regle de mise en page suffit a ecraser. Sans cette ligne, la grille de
-   bureau affiche les trois onglets en meme temps. */
+/* L'attribut hidden n'impose qu'un display:none de faible priorité, qu'une
+   règle de mise en page suffit à écraser. Sans cette ligne, la grille de
+   bureau affiche les deux onglets en même temps. */
 [hidden] { display: none !important; }
 
 body {
   margin: 0;
   background: var(--papier);
   color: var(--encre);
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 17px;
-  font-weight: 500;
-  line-height: 1.45;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* --- Entete -------------------------------------------------------------- */
+:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 3px; }
+
+/* Les titres et les valeurs qui comptent passent en Fraunces ; « SOFT » et
+   « WONK » sont les axes qui lui donnent ses terminaisons caractéristiques. */
+h1, .chiffre {
+  font-family: Fraunces, Georgia, "Times New Roman", serif;
+  font-variation-settings: "SOFT" 20, "WONK" 1;
+}
+
+/* L'« œil » : étiquette monospacée en petites capitales, marqueur de la
+   maison, employé pour tout ce qui nomme sans énoncer. */
+.oeil, .champ label, .champ .label, .chiffres dt, .titre-section, .reperes {
+  font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--estompe);
+}
+
+/* --- Entête -------------------------------------------------------------- */
 
 .entete {
   display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
   padding: 14px var(--gouttiere) 12px;
-  background: var(--encre); color: var(--papier);
+  background: var(--bandeau); color: var(--sur-bandeau);
 }
 .entete h1 {
-  margin: 0; font-size: 26px; font-weight: 700;
-  letter-spacing: 0.02em;
+  margin: 0; font-size: 28px; font-weight: 600; line-height: 1.1;
+  letter-spacing: -0.015em;
 }
 .site-resume {
   margin-left: auto; display: flex; flex-direction: column; align-items: flex-end;
-  gap: 1px; padding: 5px 11px; min-height: 44px; justify-content: center;
-  background: none; border: 1px solid #43525d; border-radius: var(--rayon);
+  gap: 2px; padding: 5px 12px; min-height: 44px; justify-content: center;
+  background: none; border: 1px solid #43362b; border-radius: var(--rayon);
   color: inherit; font: inherit; cursor: pointer; text-align: right;
 }
-.site-resume:hover, .site-resume:focus-visible { border-color: var(--soleil); }
-#site-libelle { font-weight: 700; font-size: 17px; line-height: 1.1; }
-#site-detail { font-size: 13px; color: #9fb0bc; letter-spacing: 0.02em; }
+.site-resume:hover { border-color: var(--terracotta); }
+#site-libelle { font-weight: 500; font-size: 16px; line-height: 1.1; }
+#site-detail {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 11px; letter-spacing: 0.06em; color: var(--bandeau-estompe);
+}
 
 /* --- Panneau de site ----------------------------------------------------- */
 
 .site {
   padding: 16px var(--gouttiere) 20px;
   background: var(--surface);
-  border-bottom: 1px solid var(--trait);
+  border-bottom: 1px solid var(--bordure);
 }
-.titre-section {
-  margin: 0 0 14px; font-size: 13px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.11em; color: var(--encre-2);
-}
+.titre-section { margin: 0 0 14px; }
 
 /* --- Onglets ------------------------------------------------------------- */
 
 .onglets {
   display: flex; gap: 2px; padding: 0 var(--gouttiere);
-  background: var(--encre);
+  background: var(--bandeau);
   position: sticky; top: 0; z-index: 5;
 }
 .onglets button {
   flex: 1; min-height: 50px; padding: 0 6px;
   background: none; border: none; border-bottom: 3px solid transparent;
-  color: #9fb0bc; font: inherit; font-size: 17px; font-weight: 700;
-  letter-spacing: 0.03em; cursor: pointer;
+  color: var(--bandeau-estompe); font: inherit; font-size: 17px; font-weight: 500;
+  cursor: pointer;
 }
-.onglets button[aria-selected="true"] { color: #fff; border-bottom-color: var(--soleil); }
-.onglets button:focus-visible { outline: 2px solid var(--soleil); outline-offset: -4px; }
+.onglets button[aria-selected="true"] {
+  color: var(--sur-bandeau); border-bottom-color: var(--terracotta);
+}
+.onglets button:focus-visible { outline: 2px solid var(--terracotta); outline-offset: -4px; }
 
 /* --- Colonnes ------------------------------------------------------------ */
 
 main { padding: 0 var(--gouttiere) 24px; }
 main > section { max-width: 620px; margin: 0 auto; }
 
-/* Sur telephone, l'apercu reste colle sous les onglets pendant qu'on
-   descend vers les curseurs : regler une inclinaison sans voir ce qu'elle
-   donne oblige a faire l'aller-retour a chaque degre. Le schema et son
-   verdict suffisent ; la courbe et les tableaux, eux, defilent.
-   Ecarte sur les ecrans courts, ou l'apercu ne laisserait plus de place. */
+/* Sur téléphone, l'aperçu reste collé sous les onglets pendant qu'on descend
+   vers les curseurs : régler une inclinaison sans voir ce qu'elle donne
+   oblige à faire l'aller-retour à chaque degré. Écarté sur les écrans
+   courts, où l'aperçu ne laisserait plus de place. */
 @media (max-width: 899px) and (min-height: 620px) {
   .apercu {
     position: sticky; top: 50px; z-index: 4;
     background: var(--papier);
     padding-bottom: 10px;
-    box-shadow: 0 8px 10px -8px rgba(15, 23, 30, 0.18);
+    border-bottom: 1px solid var(--bordure);
   }
   .apercu .plan { margin-top: 10px; }
 }
 
-/* Colonne gauche : ce que l'on lit. Colonne droite : ce que l'on regle. */
+/* Colonne gauche : ce que l'on lit. Colonne droite : ce que l'on règle. */
 @media (min-width: 900px) {
   main > section {
     max-width: 1040px;
@@ -129,145 +197,158 @@ main > section { max-width: 620px; margin: 0 auto; }
   .reglages > .champ:first-child { margin-top: 18px; }
 }
 
-/* --- Le plan : l'element signature --------------------------------------- */
+/* --- Le plan : l'élément signature --------------------------------------- */
 
 .plan {
   margin: 18px 0 0; padding: 10px 4px 4px;
   background: var(--surface);
-  border: 1px solid var(--trait); border-radius: var(--rayon);
+  border: 1px solid var(--bordure); border-radius: var(--rayon);
 }
 .plan svg { display: block; width: 100%; height: auto; }
 .plan-courbe { margin-top: 14px; }
 
 .p-sol { stroke: var(--encre); stroke-width: 2; }
-.p-sol-trait { stroke: var(--sol); stroke-width: 1.4; }
-.p-ombre-trait { stroke: var(--ombre); stroke-width: 1.2; }
+.p-sol-trait { stroke: var(--sauge); stroke-width: 1.4; }
+.p-ombre-trait { stroke: var(--ombre); stroke-width: 1.2; opacity: 0.55; }
 
-.p-panneau { stroke: var(--panneau); stroke-width: 7; stroke-linecap: round; }
-.p-panneau-fin { stroke: var(--panneau); stroke-width: 4; stroke-linecap: round; }
+.p-panneau { stroke: var(--ardoise); stroke-width: 7; stroke-linecap: round; }
 .p-panneau-fantome {
-  stroke: var(--panneau); stroke-width: 3; stroke-linecap: round;
-  opacity: 0.28; stroke-dasharray: 5 4;
+  stroke: var(--ardoise); stroke-width: 3; stroke-linecap: round;
+  opacity: 0.4; stroke-dasharray: 5 4;
 }
 
-.p-soleil { stroke: var(--soleil); stroke-width: 2.2; }
-.p-soleil-pointe { fill: var(--soleil); }
+.p-soleil { stroke: var(--terracotta); stroke-width: 2.2; }
+.p-soleil-pointe { fill: var(--terracotta); }
 .p-soleil-txt {
-  fill: var(--soleil); font-size: 14px; font-weight: 700;
+  fill: var(--terracotta); font-size: 14px; font-weight: 700;
   paint-order: stroke; stroke: var(--surface); stroke-width: 3.5;
 }
 
-.p-cote { stroke: var(--encre-2); stroke-width: 1.1; }
-.p-cote-pointe { fill: var(--encre-2); }
-.p-attache { stroke: var(--trait); stroke-width: 1; }
+.p-cote { stroke: var(--estompe); stroke-width: 1.1; }
+.p-cote-pointe { fill: var(--estompe); }
+.p-attache { stroke: var(--bordure-nette); stroke-width: 1; }
 .p-cote-txt {
-  fill: var(--encre); font-size: 14px; font-weight: 700;
+  fill: var(--encre); font-family: Fraunces, Georgia, serif; font-size: 13px;
+  font-weight: 700; font-variation-settings: "SOFT" 20, "WONK" 1;
   paint-order: stroke; stroke: var(--surface); stroke-width: 4;
 }
-.p-cote-txt-fort { fill: var(--soleil); font-size: 16px; }
+.p-cote-txt-fort { fill: var(--terracotta); font-size: 15px; }
 .p-note, .p-vide {
-  fill: var(--encre-2); font-size: 13px; font-weight: 500;
-  letter-spacing: 0.05em; text-transform: uppercase;
+  fill: var(--estompe);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
 }
-.p-echelle { stroke: var(--encre-2); stroke-width: 1.2; }
-.p-echelle-txt { fill: var(--encre-2); font-size: 12px; font-weight: 500; }
+.p-echelle { stroke: var(--estompe); stroke-width: 1.2; }
+.p-echelle-txt {
+  fill: var(--estompe);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 11px;
+}
 
-.p-grille { stroke: var(--trait); stroke-width: 1; }
-.p-axe { fill: var(--encre-2); font-size: 12px; font-weight: 500; }
-.p-courbe { stroke: var(--panneau); stroke-width: 2.4; fill: none; stroke-linejoin: round; }
-.p-plage { fill: var(--soleil); opacity: 0.11; }
-.p-plage-txt {
-  fill: var(--soleil); font-size: 14px; font-weight: 700;
-  paint-order: stroke; stroke: var(--surface); stroke-width: 4;
+.p-grille { stroke: var(--bordure); stroke-width: 1; }
+.p-axe {
+  fill: var(--estompe);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 11px;
 }
-.p-curseur { stroke: var(--soleil); stroke-width: 1.4; stroke-dasharray: 3 3; }
-.p-point { fill: var(--soleil); stroke: var(--surface); stroke-width: 2; }
+.p-courbe { stroke: var(--ardoise); stroke-width: 2.4; fill: none; stroke-linejoin: round; }
+.p-plage { fill: var(--soleil); opacity: 0.18; }
+.p-plage-txt {
+  fill: var(--terracotta); font-family: Fraunces, Georgia, serif; font-size: 13px;
+  font-weight: 700; paint-order: stroke; stroke: var(--surface); stroke-width: 4;
+}
+.p-curseur { stroke: var(--terracotta); stroke-width: 1.4; stroke-dasharray: 3 3; }
+.p-point { fill: var(--terracotta); stroke: var(--surface); stroke-width: 2; }
 
 /* --- Verdicts et chiffres ------------------------------------------------ */
 
-.verdict {
-  margin: 14px 0 0; font-size: 21px; line-height: 1.32; font-weight: 500;
+.verdict { margin: 14px 0 0; font-size: 20px; line-height: 1.4; }
+.verdict b {
+  font-family: Fraunces, Georgia, serif; font-weight: 700;
+  font-variation-settings: "SOFT" 20, "WONK" 1;
+  color: var(--terracotta); white-space: nowrap;
 }
-.verdict b { font-weight: 700; color: var(--soleil); white-space: nowrap; }
 .legende, .aide {
-  margin: 8px 0 0; font-size: 14px; color: var(--encre-2); line-height: 1.4;
+  margin: 8px 0 0; font-size: 14px; color: var(--estompe); line-height: 1.45;
 }
 
-/* Les separateurs sont portes par les cellules, pas par le fond du
-   conteneur : une derniere ligne incomplete reste blanche au lieu de laisser
-   apparaitre un bloc gris. */
+/* Les séparateurs sont portés par les cellules, pas par le fond du
+   conteneur : une dernière ligne incomplète reste vide au lieu de laisser
+   apparaître un bloc plein. */
 .chiffres {
   margin: 16px 0 0; padding: 0;
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
-  background: var(--surface); border: 1px solid var(--trait); border-radius: var(--rayon);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
+  background: var(--surface);
+  border: 1px solid var(--bordure); border-radius: var(--rayon);
   overflow: hidden;
 }
 .chiffres > div {
   padding: 9px 11px;
-  border-right: 1px solid var(--trait); border-bottom: 1px solid var(--trait);
+  border-right: 1px solid var(--bordure); border-bottom: 1px solid var(--bordure);
 }
-.chiffres dt {
-  font-size: 12px; font-weight: 500; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--encre-2);
+.chiffres dt { margin: 0; font-size: 10px; letter-spacing: 0.09em; }
+.chiffres dd {
+  margin: 3px 0 0; font-size: 22px; font-weight: 700; line-height: 1.15;
+  font-family: Fraunces, Georgia, serif; font-variation-settings: "SOFT" 20, "WONK" 1;
 }
-.chiffres dd { margin: 1px 0 0; font-size: 22px; font-weight: 700; }
 
 /* --- Champs de saisie ---------------------------------------------------- */
 
 .champ { margin-top: 22px; }
 .champ label, .champ .label {
   display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;
-  font-size: 14px; font-weight: 500; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--encre-2);
 }
 .champ output {
-  margin-left: auto; font-size: 21px; font-weight: 700;
-  letter-spacing: 0; text-transform: none; color: var(--soleil);
+  margin-left: auto; font-size: 22px; font-weight: 700;
+  font-family: Fraunces, Georgia, serif; font-variation-settings: "SOFT" 20, "WONK" 1;
+  letter-spacing: 0; text-transform: none; color: var(--terracotta);
 }
 .rang { display: flex; gap: 8px; }
 .rang select { flex: 1; }
 
 select, .saisie {
   width: 100%; min-height: 48px; padding: 0 12px;
-  background: var(--surface); color: var(--encre);
-  border: 1px solid var(--trait); border-radius: var(--rayon);
-  font: inherit; font-size: 17px; font-weight: 700;
+  background: var(--champ); color: var(--encre);
+  border: 1px solid var(--bordure-nette); border-radius: var(--rayon);
+  font: inherit; font-size: 17px; font-weight: 500;
 }
 .saisie { margin-top: 8px; }
 .bouton-geo {
   min-height: 48px; padding: 0 16px; white-space: nowrap;
-  background: var(--encre); color: var(--papier);
+  background: var(--terracotta); color: #fff;
   border: none; border-radius: var(--rayon);
-  font: inherit; font-size: 16px; font-weight: 700; cursor: pointer;
+  font: inherit; font-size: 16px; font-weight: 500; cursor: pointer;
 }
+.bouton-geo:hover { background: #a84a2e; }
 
 input[type="range"] {
   -webkit-appearance: none; appearance: none;
   width: 100%; height: 44px; margin: 0; background: none; cursor: pointer;
-  /* Le geste vertical revient au defilement de la page ; seul l'horizontal
+  /* Le geste vertical revient au défilement de la page ; seul l'horizontal
      atteint le curseur. */
   touch-action: pan-y;
 }
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 8px; background: var(--trait); border-radius: 4px;
+  height: 6px; background: var(--champ);
+  border: 1px solid var(--bordure-nette); border-radius: 4px;
 }
-input[type="range"]::-moz-range-track { height: 8px; background: var(--trait); border-radius: 4px; }
+input[type="range"]::-moz-range-track {
+  height: 6px; background: var(--champ);
+  border: 1px solid var(--bordure-nette); border-radius: 4px;
+}
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none;
-  width: 32px; height: 32px; margin-top: -12px; border-radius: 50%;
-  background: var(--soleil); border: 3px solid var(--surface);
-  box-shadow: 0 1px 3px rgba(15, 23, 30, 0.35);
+  width: 32px; height: 32px; margin-top: -14px; border-radius: 50%;
+  background: var(--terracotta); border: 3px solid var(--surface);
+  box-shadow: 0 1px 2px rgba(28, 20, 16, 0.3);
 }
 input[type="range"]::-moz-range-thumb {
   width: 26px; height: 26px; border-radius: 50%;
-  background: var(--soleil); border: 3px solid var(--surface);
+  background: var(--terracotta); border: 3px solid var(--surface);
 }
-input[type="range"]:focus-visible { outline: 2px solid var(--soleil); outline-offset: 4px; }
+input[type="range"]:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 4px; }
 
-.reperes {
-  display: flex; justify-content: space-between;
-  font-size: 12px; color: var(--encre-2); letter-spacing: 0.04em;
-}
+.reperes { display: flex; justify-content: space-between; font-size: 10px; }
 
 /* --- Groupes de boutons -------------------------------------------------- */
 
@@ -275,34 +356,35 @@ input[type="range"]:focus-visible { outline: 2px solid var(--soleil); outline-of
 .choix button {
   flex: 1 1 auto; min-height: 46px; padding: 0 14px;
   background: var(--surface); color: var(--encre);
-  border: 1px solid var(--trait); border-radius: var(--rayon);
-  font: inherit; font-size: 16px; font-weight: 700; cursor: pointer;
+  border: 1px solid var(--bordure-nette); border-radius: var(--rayon);
+  font: inherit; font-size: 16px; font-weight: 500; cursor: pointer;
 }
 .choix button small {
-  display: block; font-size: 12px; font-weight: 500;
-  color: var(--encre-2); letter-spacing: 0.03em;
+  display: block;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 10px; font-weight: 400; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--estompe);
 }
 .choix button[aria-checked="true"] {
-  background: var(--encre); color: var(--papier); border-color: var(--encre);
+  background: var(--terracotta); color: #fff; border-color: var(--terracotta);
 }
-.choix button[aria-checked="true"] small { color: #9fb0bc; }
-.choix button:focus-visible { outline: 2px solid var(--soleil); outline-offset: 2px; }
+.choix button[aria-checked="true"] small { color: rgba(255, 255, 255, 0.82); }
+.choix button:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 2px; }
 
 /* Variante de tête : la période visée ouvre la vue, elle doit tenir sur une
    ligne sans repousser le schéma. Les boutons se passent d'étiquette, leur
    sous-titre disant déjà de quels mois il s'agit. */
 .choix-tete { margin-top: 14px; gap: 4px; }
-.choix-tete button { min-height: 40px; padding: 3px 8px; font-size: 15px; }
-.choix-tete button small { font-size: 11px; }
+.choix-tete button { min-height: 42px; padding: 3px 8px; font-size: 15px; }
 
 /* --- Pied ---------------------------------------------------------------- */
 
 .pied {
   max-width: 620px; margin: 0 auto; padding: 20px var(--gouttiere) 28px;
-  border-top: 1px solid var(--trait);
+  border-top: 1px solid var(--bordure);
 }
-.pied p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--encre-2); }
+.pied p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--estompe); }
 
 @media (prefers-reduced-motion: no-preference) {
-  .p-panneau, .p-panneau-fin, .p-soleil, .p-courbe { transition: all 90ms linear; }
+  .p-panneau, .p-soleil, .p-courbe { transition: all 90ms linear; }
 }

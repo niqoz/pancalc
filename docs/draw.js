@@ -96,8 +96,8 @@ function panel(x0, y0, length, tilt, px, cls = "p-panneau") {
 /* --- Schéma 1 : inclinaison ------------------------------------------------ */
 
 export function drawTilt({ tilt, optimal, length = 1.7 }) {
-  const W = 360, H = 196, sol = 150, x0 = 62;
-  const px = 132 / length; // le panneau occupe une largeur fixe a plat
+  const W = 360, H = 196, sol = 150, x0 = 80;
+  const px = 126 / length; // le panneau occupe une largeur fixe a plat
   const a = tilt * Math.PI / 180;
   const hx = x0 + length * Math.cos(a) * px, hy = sol - length * Math.sin(a) * px;
 
@@ -151,7 +151,7 @@ export function drawRows({ length, tilt, layout }) {
           class="p-soleil" marker-end="url(#fl-soleil)"/>
     ${[0, 1, 2].map((i) => panel(x(i), sol, length, tilt, px)).join("")}
     <text x="${hx - dx * ext + 4}" y="${hy - dy * ext - 6}" class="p-soleil-txt">${deg(layout.sun.elevation)}</text>
-    ${dimV(sol, hy, x(1) - 11, m(layout.rise), { tie: 11 })}
+    ${dimV(sol, hy, x(1) - 7, m(layout.rise), { tie: 7 })}
     ${dimH(hx, tx, sol + 24, m(layout.spacing), { tie: 20 })}
     ${dimH(x(1), x(2), sol + 50, m(layout.pitch), { tie: 46 })}
     ${scaleBar(40, H - 8, px, 130)}`);

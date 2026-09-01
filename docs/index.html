@@ -51,6 +51,7 @@
 
   <section id="vue-inclinaison" role="tabpanel" aria-labelledby="tab-inclinaison" tabindex="0">
     <div class="apercu">
+      <div class="choix choix-tete" id="saison" role="radiogroup" aria-label="Période visée"></div>
       <figure class="plan" id="plan-inclinaison"></figure>
       <p class="verdict" id="verdict-inclinaison"></p>
     </div>
@@ -69,10 +70,6 @@
       <div class="champ">
         <label for="inclinaison-p">2 · Inclinaison du plan <output id="inclinaison-p-val" for="inclinaison-p"></output></label>
         <input type="range" id="inclinaison-p" min="0" max="90" step="1" value="30">
-      </div>
-      <div class="champ">
-        <span class="label">Période visée</span>
-        <div class="choix" id="saison" role="radiogroup" aria-label="Période visée"></div>
       </div>
     </div>
   </section>

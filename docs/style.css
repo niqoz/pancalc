@@ -288,6 +288,13 @@ input[type="range"]:focus-visible { outline: 2px solid var(--soleil); outline-of
 .choix button[aria-checked="true"] small { color: #9fb0bc; }
 .choix button:focus-visible { outline: 2px solid var(--soleil); outline-offset: 2px; }
 
+/* Variante de tête : la période visée ouvre la vue, elle doit tenir sur une
+   ligne sans repousser le schéma. Les boutons se passent d'étiquette, leur
+   sous-titre disant déjà de quels mois il s'agit. */
+.choix-tete { margin-top: 14px; gap: 4px; }
+.choix-tete button { min-height: 40px; padding: 3px 8px; font-size: 15px; }
+.choix-tete button small { font-size: 11px; }
+
 /* --- Pied ---------------------------------------------------------------- */
 
 .pied {

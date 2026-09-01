@@ -12,12 +12,14 @@ import { drawTilt, drawRows, drawLossCurve, m, deg, pct, hm } from "./draw.js";
 /** Longueurs de panneau usuelles, mesurées dans le sens de la pente.
     Les modules courants font 113 cm de large pour 196 ou 228 cm de long :
     posés en paysage c'est la largeur qui se trouve dans la pente, en
-    portrait c'est la longueur. */
+    portrait c'est la longueur. Deux modules paysage superposés font donc
+    2,26 m, à deux centimètres près la même chose qu'un module portrait
+    long — ce sont bien deux montages différents, pas un doublon. */
 const LONGUEURS = [
   [1.13, "paysage"],
   [1.96, "portrait"],
-  [2.28, "portrait long"],
-  [3.92, "2 en portrait"]
+  [2.26, "2 en paysage"],
+  [2.28, "portrait long"]
 ];
 
 /* L'orientation et l'inclinaison décrivent un seul et même chantier : elles

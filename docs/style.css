@@ -371,6 +371,11 @@ input[type="range"]:focus-visible { outline: 2px solid var(--terracotta); outlin
 .choix button[aria-checked="true"] small { color: rgba(255, 255, 255, 0.82); }
 .choix button:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 2px; }
 
+/* Les quatre longueurs de panneau ne tiennent pas sur une ligne sans que
+   leurs sous-titres se serrent : deux colonnes égales valent mieux qu'un
+   report boiteux du dernier bouton, et la cible au doigt y gagne. */
+#longueur-choix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+
 /* Variante de tête : la période visée ouvre la vue, elle doit tenir sur une
    ligne sans repousser le schéma. Les boutons se passent d'étiquette, leur
    sous-titre disant déjà de quels mois il s'agit. */

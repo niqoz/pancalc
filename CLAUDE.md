@@ -179,8 +179,10 @@ qu'il échoue bien avec l'ancien service worker.
 
 ## Essais en navigateur
 
-`tests/navigateur/lancer.sh` exécute `tests/navigateur/curseur.html` dans
-Chrome et lit son verdict via `--dump-dom`. Ces essais portent sur l'ordre
+`tests/navigateur/lancer.sh` exécute **toutes** les pages de
+`tests/navigateur/` dans Chrome et lit leur verdict via `--dump-dom` ; il ne
+s'arrête pas à la première en échec, sans quoi une page cacherait les
+suivantes. Ces essais portent sur l'ordre
 des écouteurs et la propagation des événements, que node ne reproduit pas.
 Ils ne sont pas dans `npm test`, qui reste sans dépendance au navigateur.
 

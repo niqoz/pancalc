@@ -117,13 +117,15 @@ rouvrent tels quels. Sur téléphone il passe par le partage du système, ailleu
 il enregistre un fichier, qui s'importe depuis l'accueil de SolarDim. La source
 de vérité du format est `Transfer.kt` côté SolarDim ; `tests/transfert.test.mjs`
 fige ce que l'autre côté attend, faute de quoi un écart ne se verrait qu'à
-l'import, sur une étude ouverte sans ses réglages.
+l'import, sur une étude ouverte sans ses réglages. `tests/navigateur/` parcourt
+en plus le chemin qui va du clic au fichier — Blob, ancre de téléchargement,
+repli quand le partage du système n'existe pas —, que node ne reproduit pas.
 
 ## Développement
 
 ```sh
 npm test                          # 52 tests, sans dépendance
-./tests/navigateur/lancer.sh      # essais nécessitant un vrai navigateur
+./tests/navigateur/lancer.sh      # essais nécessitant un vrai navigateur (17)
 ./tests/navigateur/mise-a-jour.sh # une app installée reçoit-elle les mises à jour
 node tools/kt-pvgis.mjs villes.json  # refait les indices de clarté depuis PVGIS
 python3 -m http.server -d docs    # les modules ES exigent http://, pas file://

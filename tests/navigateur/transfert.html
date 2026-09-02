@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Reprise dans SolarDim</title></head><body>
+<button type="button" id="reprise-bouton">Reprendre dans SolarDim</button>
+<p id="reprise-etat"></p>
+<pre id="resultat">non execute</pre>
+<script type="module">
+/* La forme du fichier se vérifie sous node ; ce qui ne s'y vérifie pas, c'est
+   le chemin qui va du clic au fichier — Blob, File, ancre de téléchargement,
+   et le repli quand le partage du système n'existe pas. C'est du code qui ne
+   s'exécute que dans un navigateur, et qui n'est parcouru qu'une fois par
+   chantier : il doit marcher du premier coup. Lancé par lancer.sh. */
+import { initTransfert } from "../../docs/transfert.js";
+
+const essais = [];
+const verifier = (nom, ok, detail = "") => essais.push([nom, ok, detail]);
+
+// Espionne l'enregistrement plutôt que de le laisser écrire sur le disque.
+let blobVu = null, nomVu = null;
+URL.createObjectURL = (b) => { blobVu = b; return "blob:essai"; };
+URL.revokeObjectURL = () => {};
+HTMLAnchorElement.prototype.click = function () { nomVu = this.download; };
+
+const reglage = { lat: 41.39, lon: 2.17, tilt: 25, azimut: -30, ville: "Barcelone" };
+initTransfert({
+  bouton: document.getElementById("reprise-bouton"),
+  etatEl: document.getElementById("reprise-etat"),
+  lire: () => reglage
+});
+
+document.getElementById("reprise-bouton").click();
+// Le gestionnaire est asynchrone : il tente le partage avant de retomber sur
+// l'enregistrement. Laisser les microtâches se vider.
+await new Promise((t) => setTimeout(t, 50));
+
+verifier("un fichier est produit", blobVu !== null);
+verifier("il porte le nom du chantier et la date",
+  /^solardim-reglage-barcelone-\d{4}-\d{2}-\d{2}\.json$/.test(nomVu || ""), `nom « ${nomVu} »`);
+verifier("il s'annonce en JSON", blobVu && blobVu.type === "application/json",
+  blobVu ? blobVu.type : "aucun");
+
+let p = null, erreur = "";
+try { p = JSON.parse(await blobVu.text()); } catch (e) { erreur = e.message; }
+verifier("son contenu est du JSON valide", p !== null, erreur);
+
+if (p) {
+  verifier("transfer v2 de SolarDim",
+    p.app === "SolarDim" && p.type === "solardim.transfer" && p.version === 2,
+    `${p.app} / ${p.type} / v${p.version}`);
+  verifier("le manifeste annonce la session",
+    Array.isArray(p.contents) && p.contents.includes("session") && !!p.session);
+  verifier("la position porte les deux coordonnées",
+    p.session.location.lat === 41.39 && p.session.location.lon === 2.17,
+    JSON.stringify(p.session.location));
+  verifier("l'orientation part sans conversion",
+    p.session.params.tilt === 25 && p.session.params.aspect === -30,
+    JSON.stringify(p.session.params));
+  verifier("la date d'export est lisible par Java",
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(p.exportedAt || ""), p.exportedAt);
+}
+
+verifier("l'écran dit où le fichier est parti",
+  /solardim-reglage/.test(document.getElementById("reprise-etat").textContent),
+  document.getElementById("reprise-etat").textContent);
+
+const rates = essais.filter(([, ok]) => !ok);
+document.getElementById("resultat").textContent =
+  essais.map(([n, ok, d]) => `${ok ? "OK   " : "ECHEC"} ${n}${d && !ok ? ` (${d})` : ""}`).join("\n")
+  + `\nBILAN ${rates.length ? `${rates.length} ECHEC(S)` : `${essais.length} essais réussis`}`;
+</script>
+</body></html>

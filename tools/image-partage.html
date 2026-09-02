@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<meta charset="utf-8">
+<title>Image de partage — SolarDim Panel Optimizer</title>
+<!-- Vignette Open Graph, 1200x630. Elle n'est pas dessinée à la main : le
+     schéma est celui de l'application, produit par `drawRows` sur un calcul
+     réel. Une vignette qui montre autre chose que le produit vieillit mal.
+     Refaire l'image :
+       python3 -m http.server 8931 &
+       google-chrome --headless=new --disable-gpu --window-size=1200,630 \
+         --screenshot=docs/partage.png \
+         "http://127.0.0.1:8931/tools/image-partage.html" -->
+<link rel="stylesheet" href="../docs/style.css">
+<style>
+  html, body { margin: 0; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden;
+    background: var(--bandeau); color: var(--sur-bandeau);
+    display: grid; grid-template-columns: 1fr 600px; align-items: center;
+    gap: 56px; padding: 52px 60px; box-sizing: border-box;
+  }
+  .marque { gap: 16px; margin-bottom: 34px; }
+  .marque-symbole { width: 92px; height: 66px; }
+  .marque-nom { font-size: 44px; }
+  .marque-produit { font-size: 14px; letter-spacing: 0.22em; }
+  h1 {
+    font-family: Fraunces, Georgia, serif; font-variation-settings: "SOFT" 20, "WONK" 1;
+    font-size: 47px; font-weight: 600; line-height: 1.14; margin: 0 0 20px;
+    letter-spacing: -0.015em;
+  }
+  h1 em { font-style: normal; color: var(--terracotta); }
+  .sous {
+    margin: 0; font-size: 21px; line-height: 1.45; color: var(--bandeau-estompe);
+    max-width: 30ch;
+  }
+  .vignette { background: var(--papier); border-radius: 8px; padding: 40px 40px 30px; }
+  .vignette svg { display: block; width: 100%; height: auto; }
+  .verdict {
+    margin: 22px 0 0; font-family: Fraunces, Georgia, serif;
+    font-variation-settings: "SOFT" 20, "WONK" 1;
+    font-size: 24px; line-height: 1.35; color: var(--encre); text-align: center;
+  }
+  .verdict b { color: var(--terracotta); font-weight: 700; }
+</style>
+
+<div>
+  <h1 class="marque">
+    <img class="marque-symbole" src="../docs/brandmark-panel.svg" alt="">
+    <span class="marque-textes">
+      <span class="marque-nom"><span>Solar</span><strong>Dim</strong></span>
+      <span class="marque-produit">Panel Optimizer</span>
+    </span>
+  </h1>
+  <h1>Inclinaison et <em>distance<br>entre rangées</em></h1>
+  <p class="sous">Le calcul du chantier, hors connexion et sans compte.</p>
+</div>
+
+<div class="vignette">
+  <div id="schema"></div>
+  <p class="verdict" id="verdict"></p>
+</div>
+
+<script type="module">
+import { rowLayout } from "../docs/layout.js";
+import { drawRows, m } from "../docs/draw.js";
+
+// Un cas courant : module portrait, tables à 30°, champ plein sud vers Lyon,
+// sans ombre du 21 décembre de 9 h à 15 h.
+const l = rowLayout(45.75, 1.96, 30, 0, "solstice_6h");
+document.getElementById("schema").innerHTML = drawRows({ length: 1.96, tilt: 30, layout: l });
+document.getElementById("verdict").innerHTML =
+  `<b>${m(l.spacing)}</b> entre rangées, <b>${m(l.pitch)}</b> de pas.`;
+</script>
+</html>

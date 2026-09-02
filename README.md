@@ -61,6 +61,54 @@ degré de hauteur et rend des écartements sans usage : c'est exact, mais c'est
 le critère qu'il faut alors changer.
 Pour un chiffrage de production, repasser par PVGIS.
 
+## Diffusion
+
+L'outil est gratuit et sert de porte d'entrée à SolarDim, distribuée sur le
+Play Store. Ce qui s'y rapporte tient en trois pièces.
+
+**Le fond de page** — les six questions sous l'outil — est la seule matière
+qu'un moteur de recherche puisse lire : tout le reste est calculé en
+JavaScript. Il disparaît en mode autonome, une application installée n'ayant
+plus de moteur de recherche derrière elle.
+
+**La vignette de partage** (`docs/partage.png`, 1200 × 630) n'est pas dessinée
+à la main : elle montre le schéma de l'application sur un calcul réel. La
+refaire après un changement d'identité ou de schéma :
+
+```sh
+python3 -m http.server 8932 &
+google-chrome --headless=new --disable-gpu --window-size=1200,630 \
+  --screenshot=docs/partage.png "http://127.0.0.1:8932/tools/image-partage.html"
+```
+
+**L'adresse** est écrite en dur à sept endroits — `canonical`, `og:url`,
+`og:image` et les données structurées dans `index.html`, plus `sitemap.xml` et
+`robots.txt`. Il n'y a pas de build pour les dériver d'une variable ; un
+changement de domaine est donc un remplacement à faire d'un bloc :
+
+```sh
+grep -rl niqoz.github.io/pancalc docs/ | xargs sed -i 's#https://niqoz.github.io/pancalc#https://<nouveau>#g'
+```
+
+`robots.txt` n'a d'effet qu'à la racine d'un domaine : servi sous un
+sous-chemin de `github.io`, il est ignoré. `sitemap.xml`, lui, agit dès qu'il
+est déclaré dans la Search Console.
+
+## Mesure de l'acquisition
+
+Rien n'est mesuré dans l'application : aucun traceur, aucun appel réseau. Ce
+qui se mesure se lit du côté du Play Store, à condition que le lien qui y mène
+porte sa campagne :
+
+```
+https://play.google.com/store/apps/details?id=fr.solairdim.droid&referrer=utm_source%3Dpanel-optimizer%26utm_medium%3Dpwa
+```
+
+Le `referrer` remonte à l'installation et l'acquisition se lit par
+`utm_source` dans la Play Console. Ce lien n'est pas encore posé dans la page :
+un bouton vers une fiche absente coûte plus qu'il ne rapporte, et il attend la
+publication.
+
 ## Reprise dans SolarDim
 
 Le bouton du pied de page écrit un « transfer v2 », le format d'échange des

@@ -110,6 +110,32 @@ couverture de 105 %. Aujourd'hui le curseur de latitude l'interdit ; l'ouvrir
 sans retourner les critères, les saisons et le sens de l'azimut ferait un
 calcul faux qui ne se signale pas.
 
+## Diffusion et référencement
+
+L'outil est le produit d'appel de SolarDim, payante sur le Play Store : il doit
+donc être **trouvable**, ce qu'une page dont tout est calculé en JavaScript
+n'est pas. D'où le fond de page — les six questions sous l'outil, seule matière
+lisible par un moteur —, masqué en `display-mode: standalone` puisqu'une
+application installée n'a plus de moteur de recherche derrière elle.
+
+**L'adresse du site est écrite en dur à sept endroits** : `canonical`,
+`og:url`, `og:image` et le JSON-LD d'`index.html`, plus `sitemap.xml` et
+`robots.txt`. Sans build, rien ne les dérive d'une variable — un changement de
+domaine est un `sed` sur `docs/`, décrit dans le README. `robots.txt` n'agit
+qu'à la racine d'un domaine : sous un sous-chemin de `github.io` il est ignoré.
+
+`docs/partage.png` est **produit**, pas dessiné : `tools/image-partage.html`
+rejoue le schéma de l'application sur un calcul réel, et Chrome en tire le PNG.
+Une vignette qui montre autre chose que le produit vieillit mal.
+
+Ces trois fichiers — vignette, `robots.txt`, `sitemap.xml` — sont **hors du
+cache hors ligne**, et le test le vérifie : ils ne servent qu'aux moteurs et
+aux aperçus de partage, les mettre en cache ferait porter la vignette au
+forfait d'un installateur sur un chantier.
+
+Rien n'est mesuré dans l'application. L'acquisition se lira côté Play Console,
+par le `referrer` du lien vers la fiche — lien qui attend la publication.
+
 ## Reprise dans SolarDim
 
 `transfert.js` écrit un « transfer v2 » — le format d'échange que les clients

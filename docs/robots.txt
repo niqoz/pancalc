@@ -1,0 +1,8 @@
+# Rien à cacher : l'outil est gratuit et sans compte.
+# Attention : ce fichier ne prend effet qu'à la racine d'un domaine. Servi
+# sous https://niqoz.github.io/pancalc/, c'est le robots.txt de github.io qui
+# fait loi et celui-ci est ignoré — il attend le domaine propre.
+User-agent: *
+Allow: /
+
+Sitemap: https://niqoz.github.io/pancalc/sitemap.xml

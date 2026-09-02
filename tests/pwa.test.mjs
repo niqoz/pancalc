@@ -26,8 +26,12 @@ function fichiers(dir = DOCS, prefixe = "") {
   return out;
 }
 
-// sw.js ne se met pas lui-meme en cache, la licence n'est pas chargee par la page.
-const HORS_CACHE = new Set(["sw.js", "vendor/fonts/Fraunces-OFL.txt", "vendor/fonts/DMSans-OFL.txt"]);
+/* sw.js ne se met pas lui-meme en cache, la licence n'est pas chargee par la
+   page. Les trois dernieres ne servent qu'aux moteurs de recherche et aux
+   apercus de partage : les mettre en cache ferait porter 66 ko de vignette au
+   forfait d'un installateur qui installe l'application sur un chantier. */
+const HORS_CACHE = new Set(["sw.js", "vendor/fonts/Fraunces-OFL.txt", "vendor/fonts/DMSans-OFL.txt",
+  "robots.txt", "sitemap.xml", "partage.png"]);
 
 test("tout fichier livre est mis en cache pour le hors ligne", () => {
   const liste = new Set(assets());

@@ -1,17 +1,38 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CITIES, nearestCity } from "../docs/sites.js";
+import { CITIES, COUNTRIES, nearestCity } from "../docs/sites.js";
 import { CLIMATES } from "../docs/solar.js";
 
 /* Un relevé de position ne sert à rien s'il rattache le chantier à un repère
    situé à l'autre bout de la région : la latitude serait fausse, et la zone
    climatique avec, puisqu'elle est celle du repère le plus proche. */
 
-test("chaque repère est en France et pointe une zone existante", () => {
-  for (const [nom, lat, lon, zone] of CITIES) {
+test("chaque repère tient dans l'Europe couverte et pointe une zone existante", () => {
+  const pays = new Set(COUNTRIES.map(([c]) => c));
+  for (const [nom, lat, lon, zone, p] of CITIES) {
     assert.ok(zone in CLIMATES, `${nom} : zone inconnue « ${zone} »`);
-    assert.ok(lat > 41 && lat < 51.5, `${nom} : latitude ${lat} hors de France`);
-    assert.ok(lon > -5.5 && lon < 9.8, `${nom} : longitude ${lon} hors de France`);
+    assert.ok(pays.has(p), `${nom} : pays « ${p} » absent du menu`);
+    // Bornes du curseur de latitude : un repère hors de sa course serait
+    // inatteignable au doigt, et le relevé se recalerait en silence.
+    assert.ok(lat >= 35 && lat <= 60, `${nom} : latitude ${lat} hors du curseur`);
+    assert.ok(lon > -11 && lon < 20, `${nom} : longitude ${lon} hors d'Europe de l'Ouest`);
+  }
+});
+
+/* Le nom est la clé du menu et de l'état enregistré : deux repères homonymes
+   et le choix de l'un charge les coordonnées de l'autre. Deux « Valence »
+   s'étaient ainsi glissées, la Drôme et l'Espagne. */
+test("aucun repère n'est homonyme d'un autre", () => {
+  const vus = new Set();
+  for (const [nom] of CITIES) {
+    assert.ok(!vus.has(nom), `deux repères nommés « ${nom} »`);
+    vus.add(nom);
+  }
+});
+
+test("chaque pays du menu a au moins un repère", () => {
+  for (const [code, nom] of COUNTRIES) {
+    assert.ok(CITIES.some((c) => c[4] === code), `${nom} : aucun repère`);
   }
 });
 
@@ -24,7 +45,7 @@ test("un relevé tombe sur la ville quand on y est", () => {
   }
 });
 
-test("des lieux français hors liste tombent sur une zone plausible", () => {
+test("des lieux hors liste tombent sur une zone plausible", () => {
   const cas = [
     ["Santa-Maria-Poggio", 42.36, 9.52, "mediterraneen"],
     ["Calvi", 42.57, 8.76, "mediterraneen"],
@@ -33,7 +54,13 @@ test("des lieux français hors liste tombent sur une zone plausible", () => {
     ["Pau", 43.30, -0.37, "sudouest"],
     ["Quimper", 47.99, -4.10, "atlantique"],
     ["Mulhouse", 47.75, 7.34, "continental"],
-    ["Dunkerque", 51.03, 2.38, "oceanique"]
+    ["Dunkerque", 51.03, 2.38, "oceanique"],
+    // Hors de France, la zone reste celle du repère le plus proche.
+    ["Grenade", 37.18, -3.60, "mediterraneen"],
+    ["Cordoue", 37.89, -4.78, "mediterraneen"],
+    ["Utrecht", 52.09, 5.12, "continental"],
+    ["Liverpool", 53.41, -2.98, "oceanique"],
+    ["Bâle", 47.56, 7.59, "continental"]
   ];
   for (const [nom, lat, lon, attendue] of cas) {
     const p = nearestCity(lat, lon);

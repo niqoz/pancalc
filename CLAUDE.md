@@ -50,6 +50,17 @@ le mode sombre suit alors sans retouche.
   `sites.js`, et non un découpage géographique séparé. Une heuristique lat/lon
   avait été écrite en parallèle du tableau : les deux divergeaient sur six
   villes. Une seule source de vérité, le tableau.
+- **Le nom d'un repère est sa clé**, dans le menu comme dans l'état
+  enregistré. Deux « Valence » — la Drôme et l'Espagne — se sont glissées à
+  l'ouverture européenne : choisir l'une chargeait les coordonnées de l'autre.
+  L'espagnole est devenue « Valencia », et un test interdit les homonymes.
+- **Les cinq zones ne sont pas des régions**, ce sont des **formes de ciel** :
+  elles portent la répartition saisonnière et la part diffuse, pas le niveau
+  d'irradiation, que la latitude reprend à son compte. C'est pourquoi elles
+  couvrent l'Europe de l'Ouest sans qu'il faille en ajouter — mesuré, non
+  supposé (`tools/kt-pvgis.mjs`, 62 villes). Corollaire : **le niveau absolu
+  n'est pas garanti hors de France** (7 % d'écart à Faro). Rien ne l'affiche
+  aujourd'hui ; afficher un kWh/m² imposerait de recaler les zones d'abord.
 - Les paramètres du modèle de ciel (`TUNING` dans `solar.js`) sont dégénérés :
   les optimiser tous les trois ensemble les envoie aux bornes du domaine sans
   gain réel. Les valeurs actuelles sont un compromis assumé.
@@ -82,6 +93,33 @@ Les champs sont numérotés dans l'ordre de réglage réel sur le terrain. Dans
 Rangées, le panneau ouvre désormais la vue afin que sa géométrie soit fixée
 avant de lire le schéma ; viennent ensuite l'orientation, l'inclinaison et le
 critère d'ombrage.
+
+## Couverture géographique
+
+Les repères de `sites.js` couvrent les douze pays d'Europe de l'Ouest où
+SolarDim se distribue, groupés par pays dans le menu — quatre-vingt-dix à la
+file seraient illisibles au pouce. Le curseur de latitude va de 35 à 60° :
+ses bornes et le contenu du tableau se tiennent, un repère hors course se
+recalerait en silence, et un test le vérifie.
+
+Tout est **hémisphère nord**, et le rester est une hypothèse du code, pas une
+limite du moteur : les critères d'ombrage de `layout.js` sont datés au 21
+décembre, qui est le solstice d'**été** au sud de l'équateur. Un champ chilien
+y obtiendrait 0,10 m d'écartement au lieu de 1,21 m, avec un taux de
+couverture de 105 %. Aujourd'hui le curseur de latitude l'interdit ; l'ouvrir
+sans retourner les critères, les saisons et le sens de l'azimut ferait un
+calcul faux qui ne se signale pas.
+
+## Reprise dans SolarDim
+
+`transfert.js` écrit un « transfer v2 » — le format d'échange que les clients
+Android et Windows se lisent déjà (`core/.../Transfer.kt`). Trois pièges, tous
+couverts par `tests/transfert.test.mjs` : c'est le manifeste `contents` qui
+décide de la forme lue et non le `type`, faute de quoi le fichier passe pour la
+forme à plat et arrive sans ses paramètres, en silence ; `aspect` est l'azimut
+de PVGIS, identique à celui d'ici, donc aucune conversion à inventer ; et la
+position exige les **deux** coordonnées, alors que la longitude n'entre dans
+aucun calcul de l'application — rien ne signalerait sa disparition de l'état.
 
 ## Invite d'installation
 

@@ -416,7 +416,51 @@ input[type="range"]:focus-visible { outline: 2px solid var(--terracotta); outlin
 .choix-tete { margin-top: 14px; gap: 4px; }
 .choix-tete button { min-height: 42px; padding: 3px 8px; font-size: 15px; }
 
+/* --- Fond de page -------------------------------------------------------- */
+
+/* Le texte qui explique le calcul. Il ne sert pas celui qui s'en sert déjà,
+   il sert celui qui cherche « distance entre rangées photovoltaïques » : c'est
+   la seule matière qu'un moteur de recherche puisse lire d'une page dont tout
+   le reste est calculé en JavaScript. Il vient donc après l'outil, jamais
+   devant, et disparaît une fois l'application installée — en mode autonome il
+   n'y a plus de moteur de recherche, seulement un chantier. */
+.guide {
+  max-width: 620px; margin: 0 auto; padding: 26px var(--gouttiere) 0;
+  border-top: 1px solid var(--bordure);
+}
+.guide article { margin: 0 0 22px; }
+.guide h3 {
+  font-family: Fraunces, Georgia, "Times New Roman", serif;
+  font-variation-settings: "SOFT" 20, "WONK" 1;
+  font-size: 18px; font-weight: 600; line-height: 1.3;
+  margin: 0 0 6px; color: var(--encre);
+}
+.guide p { margin: 0 0 8px; font-size: 15px; line-height: 1.55; color: var(--estompe); }
+.guide em { font-style: normal; color: var(--encre); white-space: nowrap; }
+.guide strong { color: var(--encre); font-weight: 600; }
+
+@media (display-mode: standalone) { .guide { display: none; } }
+
 /* --- Pied ---------------------------------------------------------------- */
+
+/* Reprise dans SolarDim : même forme que l'invite d'installation, parce que
+   c'est la même nature de proposition — un pas de plus, jamais en travers. */
+.reprise {
+  margin: 0 0 18px; padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--bordure); border-radius: var(--rayon);
+}
+.reprise p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--encre); }
+.reprise strong { font-weight: 600; }
+.reprise button {
+  margin-top: 12px; min-height: 46px; padding: 0 18px;
+  background: none; color: var(--terracotta);
+  border: 1px solid var(--bordure-nette); border-radius: var(--rayon);
+  font: inherit; font-size: 16px; font-weight: 500; cursor: pointer;
+}
+.reprise button:hover { border-color: var(--terracotta); }
+.reprise .aide:empty { display: none; }
+.reprise .aide { margin-top: 8px; }
 
 .pied {
   max-width: 620px; margin: 0 auto; padding: 20px var(--gouttiere) 28px;

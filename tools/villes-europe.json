@@ -1,0 +1,374 @@
+[
+ {
+  "nom": "Séville",
+  "pays": "ES",
+  "lat": 37.39,
+  "lon": -5.99
+ },
+ {
+  "nom": "Málaga",
+  "pays": "ES",
+  "lat": 36.72,
+  "lon": -4.42
+ },
+ {
+  "nom": "Faro",
+  "pays": "PT",
+  "lat": 37.02,
+  "lon": -7.93
+ },
+ {
+  "nom": "Murcie",
+  "pays": "ES",
+  "lat": 37.99,
+  "lon": -1.13
+ },
+ {
+  "nom": "Madrid",
+  "pays": "ES",
+  "lat": 40.42,
+  "lon": -3.7
+ },
+ {
+  "nom": "Valence",
+  "pays": "ES",
+  "lat": 39.47,
+  "lon": -0.38
+ },
+ {
+  "nom": "Lisbonne",
+  "pays": "PT",
+  "lat": 38.72,
+  "lon": -9.14
+ },
+ {
+  "nom": "Barcelone",
+  "pays": "ES",
+  "lat": 41.39,
+  "lon": 2.17
+ },
+ {
+  "nom": "Saragosse",
+  "pays": "ES",
+  "lat": 41.65,
+  "lon": -0.89
+ },
+ {
+  "nom": "Porto",
+  "pays": "PT",
+  "lat": 41.15,
+  "lon": -8.61
+ },
+ {
+  "nom": "Bilbao",
+  "pays": "ES",
+  "lat": 43.26,
+  "lon": -2.93
+ },
+ {
+  "nom": "Saint-Jacques",
+  "pays": "ES",
+  "lat": 42.88,
+  "lon": -8.54
+ },
+ {
+  "nom": "Palerme",
+  "pays": "IT",
+  "lat": 38.12,
+  "lon": 13.36
+ },
+ {
+  "nom": "Catane",
+  "pays": "IT",
+  "lat": 37.51,
+  "lon": 15.09
+ },
+ {
+  "nom": "Cagliari",
+  "pays": "IT",
+  "lat": 39.22,
+  "lon": 9.12
+ },
+ {
+  "nom": "Naples",
+  "pays": "IT",
+  "lat": 40.85,
+  "lon": 14.27
+ },
+ {
+  "nom": "Bari",
+  "pays": "IT",
+  "lat": 41.12,
+  "lon": 16.87
+ },
+ {
+  "nom": "Rome",
+  "pays": "IT",
+  "lat": 41.9,
+  "lon": 12.5
+ },
+ {
+  "nom": "Florence",
+  "pays": "IT",
+  "lat": 43.77,
+  "lon": 11.26
+ },
+ {
+  "nom": "Bologne",
+  "pays": "IT",
+  "lat": 44.49,
+  "lon": 11.34
+ },
+ {
+  "nom": "Milan",
+  "pays": "IT",
+  "lat": 45.46,
+  "lon": 9.19
+ },
+ {
+  "nom": "Turin",
+  "pays": "IT",
+  "lat": 45.07,
+  "lon": 7.69
+ },
+ {
+  "nom": "Venise",
+  "pays": "IT",
+  "lat": 45.44,
+  "lon": 12.32
+ },
+ {
+  "nom": "Lugano",
+  "pays": "CH",
+  "lat": 46.01,
+  "lon": 8.96
+ },
+ {
+  "nom": "Genève",
+  "pays": "CH",
+  "lat": 46.2,
+  "lon": 6.14
+ },
+ {
+  "nom": "Zurich",
+  "pays": "CH",
+  "lat": 47.37,
+  "lon": 8.54
+ },
+ {
+  "nom": "Berne",
+  "pays": "CH",
+  "lat": 46.95,
+  "lon": 7.45
+ },
+ {
+  "nom": "Innsbruck",
+  "pays": "AT",
+  "lat": 47.27,
+  "lon": 11.39
+ },
+ {
+  "nom": "Graz",
+  "pays": "AT",
+  "lat": 47.07,
+  "lon": 15.44
+ },
+ {
+  "nom": "Salzbourg",
+  "pays": "AT",
+  "lat": 47.81,
+  "lon": 13.04
+ },
+ {
+  "nom": "Vienne",
+  "pays": "AT",
+  "lat": 48.21,
+  "lon": 16.37
+ },
+ {
+  "nom": "Munich",
+  "pays": "DE",
+  "lat": 48.14,
+  "lon": 11.58
+ },
+ {
+  "nom": "Stuttgart",
+  "pays": "DE",
+  "lat": 48.78,
+  "lon": 9.18
+ },
+ {
+  "nom": "Fribourg-en-B.",
+  "pays": "DE",
+  "lat": 47.99,
+  "lon": 7.85
+ },
+ {
+  "nom": "Nuremberg",
+  "pays": "DE",
+  "lat": 49.45,
+  "lon": 11.08
+ },
+ {
+  "nom": "Francfort",
+  "pays": "DE",
+  "lat": 50.11,
+  "lon": 8.68
+ },
+ {
+  "nom": "Cologne",
+  "pays": "DE",
+  "lat": 50.94,
+  "lon": 6.96
+ },
+ {
+  "nom": "Dresde",
+  "pays": "DE",
+  "lat": 51.05,
+  "lon": 13.74
+ },
+ {
+  "nom": "Leipzig",
+  "pays": "DE",
+  "lat": 51.34,
+  "lon": 12.37
+ },
+ {
+  "nom": "Berlin",
+  "pays": "DE",
+  "lat": 52.52,
+  "lon": 13.4
+ },
+ {
+  "nom": "Hanovre",
+  "pays": "DE",
+  "lat": 52.37,
+  "lon": 9.73
+ },
+ {
+  "nom": "Hambourg",
+  "pays": "DE",
+  "lat": 53.55,
+  "lon": 9.99
+ },
+ {
+  "nom": "Rostock",
+  "pays": "DE",
+  "lat": 54.09,
+  "lon": 12.14
+ },
+ {
+  "nom": "Luxembourg",
+  "pays": "LU",
+  "lat": 49.61,
+  "lon": 6.13
+ },
+ {
+  "nom": "Liège",
+  "pays": "BE",
+  "lat": 50.63,
+  "lon": 5.57
+ },
+ {
+  "nom": "Bruxelles",
+  "pays": "BE",
+  "lat": 50.85,
+  "lon": 4.35
+ },
+ {
+  "nom": "Anvers",
+  "pays": "BE",
+  "lat": 51.22,
+  "lon": 4.4
+ },
+ {
+  "nom": "Rotterdam",
+  "pays": "NL",
+  "lat": 51.92,
+  "lon": 4.48
+ },
+ {
+  "nom": "Amsterdam",
+  "pays": "NL",
+  "lat": 52.37,
+  "lon": 4.9
+ },
+ {
+  "nom": "Groningue",
+  "pays": "NL",
+  "lat": 53.22,
+  "lon": 6.57
+ },
+ {
+  "nom": "Londres",
+  "pays": "GB",
+  "lat": 51.51,
+  "lon": -0.13
+ },
+ {
+  "nom": "Bristol",
+  "pays": "GB",
+  "lat": 51.45,
+  "lon": -2.59
+ },
+ {
+  "nom": "Cardiff",
+  "pays": "GB",
+  "lat": 51.48,
+  "lon": -3.18
+ },
+ {
+  "nom": "Birmingham",
+  "pays": "GB",
+  "lat": 52.49,
+  "lon": -1.89
+ },
+ {
+  "nom": "Cork",
+  "pays": "IE",
+  "lat": 51.9,
+  "lon": -8.47
+ },
+ {
+  "nom": "Dublin",
+  "pays": "IE",
+  "lat": 53.35,
+  "lon": -6.26
+ },
+ {
+  "nom": "Manchester",
+  "pays": "GB",
+  "lat": 53.48,
+  "lon": -2.24
+ },
+ {
+  "nom": "Belfast",
+  "pays": "GB",
+  "lat": 54.6,
+  "lon": -5.93
+ },
+ {
+  "nom": "Newcastle",
+  "pays": "GB",
+  "lat": 54.98,
+  "lon": -1.61
+ },
+ {
+  "nom": "Glasgow",
+  "pays": "GB",
+  "lat": 55.86,
+  "lon": -4.25
+ },
+ {
+  "nom": "Édimbourg",
+  "pays": "GB",
+  "lat": 55.95,
+  "lon": -3.19
+ },
+ {
+  "nom": "Aberdeen",
+  "pays": "GB",
+  "lat": 57.15,
+  "lon": -2.09
+ }
+]

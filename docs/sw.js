@@ -22,6 +22,7 @@ const ASSETS = [
   "./curseur.js",
   "./installer.js",
   "./maj.js",
+  "./transfert.js",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",

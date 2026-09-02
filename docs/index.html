@@ -3,9 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SolarDim — Panel Optimizer</title>
-<meta name="description" content="Outil satellite SolarDim pour optimiser l’inclinaison et la distance entre rangées photovoltaïques. Fonctionne hors connexion.">
+<title>Inclinaison et distance entre rangées photovoltaïques · SolarDim Panel Optimizer</title>
+<meta name="description" content="Calcul de l'inclinaison optimale des panneaux solaires et de l'écartement entre rangées photovoltaïques, avec la perte pour toute pente imposée. Gratuit, sans compte, fonctionne hors connexion sur le chantier.">
 <meta name="theme-color" content="#1C1410">
+<link rel="canonical" href="https://niqoz.github.io/pancalc/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Inclinaison et distance entre rangées photovoltaïques">
+<meta property="og:description" content="L'inclinaison optimale, la perte pour une pente imposée et l'écartement entre rangées, calculés sur le chantier sans réseau.">
+<meta property="og:url" content="https://niqoz.github.io/pancalc/">
+<meta property="og:image" content="https://niqoz.github.io/pancalc/icon-512.png">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -39,10 +47,10 @@
   </div>
   <div class="champ">
     <label for="latitude">Latitude <output id="latitude-val" for="latitude"></output></label>
-    <input type="range" id="latitude" min="41" max="51.5" step="0.1">
+    <input type="range" id="latitude" min="35" max="60" step="0.1">
   </div>
   <div class="champ">
-    <label for="climat">Zone climatique</label>
+    <label for="climat">Type de ciel</label>
     <select id="climat"></select>
     <p id="climat-aide" class="aide"></p>
   </div>
@@ -119,14 +127,108 @@
 
 </main>
 
+<section class="guide" aria-labelledby="guide-titre">
+  <h2 id="guide-titre" class="titre-section">Les questions auxquelles ce calcul répond</h2>
+
+  <article>
+    <h3>Quelle inclinaison donner à des panneaux photovoltaïques ?</h3>
+    <p>Sur un toit existant, la pente est celle du toit : la question n'est pas
+    de la choisir mais de savoir ce qu'elle coûte. En France métropolitaine,
+    l'inclinaison optimale d'un plan orienté plein sud tient entre 35 et 37°,
+    de Perpignan à Lille — elle dépend beaucoup moins de la latitude qu'on ne
+    le croit. Et la plage qui reste à moins de 5 % de cet optimum s'étend
+    d'environ 15 à 57° : presque toutes les toitures y sont. C'est cette
+    largeur-là qui sert sur le chantier, plus que l'optimum lui-même. Un plan
+    horizontal, lui, perd de l'ordre de 19 %.</p>
+  </article>
+
+  <article>
+    <h3>Quelle distance entre deux rangées de panneaux solaires ?</h3>
+    <p>Sur une table inclinée de β dont la longueur dans le sens de la pente
+    vaut L, le bord haut domine le bord bas de <em>h = L·sin β</em>. Pour que
+    l'ombre portée n'atteigne pas la rangée suivante alors que le soleil est à
+    la hauteur α et à un écart d'azimut Δ de l'axe du champ, il faut laisser
+    un espace libre <em>d = h·cos Δ / tan α</em>. Le pas entre rangées — le
+    <em>pitch</em>, qui est aussi l'emprise au sol d'une rangée — y ajoute la
+    projection du panneau : <em>D = L·cos β + d</em>.</p>
+  </article>
+
+  <article>
+    <h3>Pourquoi calculer l'ombrage au 21 décembre, et à quelle heure ?</h3>
+    <p>C'est le choix le plus lourd de tout le dimensionnement, bien avant la
+    latitude. Pour un module de 1,13 m dans la pente, incliné à 30°, en champ
+    plein sud vers Lyon : être sans ombre au seul midi solaire du solstice
+    demande 1,49 m d'espace libre, soit un pas de 2,47 m ; l'être de 9 h à
+    15 h ce même jour en demande 2,50 m, soit un pas de 3,48 m. Le taux de
+    couverture au sol tombe de 46 à 32 % — sur une parcelle donnée, un tiers
+    de puissance installée en moins.</p>
+  </article>
+
+  <article>
+    <h3>Combien perd une toiture orientée à l'est ou à l'ouest ?</h3>
+    <p>Moins qu'on ne le redoute d'un côté, plus qu'on ne l'espère de l'autre.
+    À 30° de pente, un plan sud-ouest ou sud-est perd environ 6 % par rapport
+    au plein sud ; un plan plein ouest ou plein est en perd environ 21 %. Ces
+    écarts se creusent avec la pente : une toiture raide orientée à l'ouest
+    paie beaucoup plus cher son orientation qu'une toiture plate.</p>
+  </article>
+
+  <article>
+    <h3>Qu'est-ce que le taux de couverture au sol (GCR) ?</h3>
+    <p>Le rapport entre la longueur du panneau dans la pente et le pas entre
+    rangées. Il dit quelle part du terrain porte effectivement des modules :
+    à 40 %, il faut 2,5 m² de parcelle par m² de capteur. C'est le chiffre qui
+    traduit un critère d'ombrage en surface de terrain, donc en coût.</p>
+  </article>
+
+  <article>
+    <h3>Ce que l'outil est, et ce qu'il n'est pas</h3>
+    <p>La géométrie — course du soleil, ombres portées, écartement des rangées
+    — est exacte. Le modèle d'irradiation, lui, est approché : calé sur les
+    irradiations PVGIS, il donne l'inclinaison optimale à 3° près et les pertes
+    relatives à quelques pour cent, ce qui suffit à trancher une pente ou un
+    écartement. Il ne remplace pas un calcul de production : pour chiffrer des
+    kilowattheures, un autoconsommation et une rentabilité, il faut un outil de
+    dimensionnement complet — c'est ce que fait <strong>SolarDim</strong>,
+    l'application dont celle-ci est le satellite.</p>
+    <p>Quatre-vingt-dix repères couvrent la France et l'Europe de l'Ouest —
+    Allemagne, Autriche, Belgique, Espagne, Irlande, Italie, Luxembourg,
+    Pays-Bas, Portugal, Royaume-Uni, Suisse — ou se règlent à la latitude et au
+    type de ciel. Tout le calcul se fait dans le navigateur, sans aucun appel réseau :
+    l'outil est utilisable en toiture, en cave ou en pleine campagne. Il
+    s'installe sur le téléphone comme une application, et reste gratuit et sans
+    compte.</p>
+  </article>
+</section>
+
 <footer class="pied">
   <div class="installer" id="installer" hidden>
     <p id="installer-texte"></p>
     <button type="button" id="installer-bouton" hidden>Installer l’application</button>
   </div>
+  <div class="reprise">
+    <p>Le site, l'inclinaison et l'orientation se reprennent dans
+    <strong>SolarDim</strong>, qui en tire la production, l'autoconsommation,
+    la rentabilité et la fiche client.</p>
+    <button type="button" id="reprise-bouton">Reprendre dans SolarDim</button>
+    <p id="reprise-etat" class="aide" role="status"></p>
+  </div>
   <p>Modèle de ciel calé sur les irradiations PVGIS : inclinaison optimale à 3° près, gain d'inclinaison à 2 % près. Pour un chiffrage de production, repasser par PVGIS.</p>
 </footer>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "SolarDim Panel Optimizer",
+  "url": "https://niqoz.github.io/pancalc/",
+  "applicationCategory": "https://schema.org/BusinessApplication",
+  "operatingSystem": "Tout navigateur",
+  "inLanguage": "fr",
+  "description": "Calcul de l\'inclinaison optimale des panneaux photovolta\u00efques et de la distance entre rang\u00e9es, hors connexion.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+}
+</script>
 <script type="module" src="app.js"></script>
 </body>
 </html>

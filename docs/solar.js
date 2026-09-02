@@ -104,39 +104,50 @@ export function extraterrestrialHorizontal(lat, n, solarHour) {
   return GSC * (1 + 0.033 * Math.cos(toRad(360 * n / 365))) * Math.sin(toRad(alt));
 }
 
-/* Indices de clarté mensuels par grande zone climatique française, obtenus
+/* Indices de clarté mensuels par forme de ciel, obtenus
    en divisant les irradiations globales horizontales mensuelles de référence
    (ordre de grandeur PVGIS SARAH) par l'irradiation extraterrestre calculée
    ici. La répartition saisonnière compte autant que le total annuel : des Kt
-   d'hiver surévalues suffisent a raidir l'inclinaison optimale de 4 degrés. */
+   d'hiver surévalues suffisent a raidir l'inclinaison optimale de 4 degrés.
+
+   Ces cinq formes, calées sur la France, couvrent toute l'Europe de l'Ouest :
+   mesuré sur 62 villes de douze pays, l'écart sur ce que l'application affiche
+   — optimum annuel, d'hiver, d'été, perte d'orientation, perte de plat —
+   reste sous 3° et 2 points (`tools/kt-pvgis.mjs`). C'est la **forme** du
+   ciel que la zone porte, pas le niveau : la latitude, réglée à part, fait le
+   reste. Le niveau, lui, n'est jamais affiché — l'écart au site réel atteint
+   7 % à Faro, ce qui interdirait d'en tirer un productible.
+
+   Leurs noms ne sont donc plus régionaux : « Nord et Picardie » n'aurait
+   aucun sens à Glasgow, qui relève pourtant de la même forme de ciel. */
 export const CLIMATES = {
   mediterraneen: {
-    label: "Méditerranéen",
-    hint: "Marseille, Perpignan, Corse, Nice",
+    label: "Très ensoleillé",
+    hint: "Marseille, Perpignan, Séville, Rome",
     // Cale sur Marseille, 1650 kWh/m²/an sur plan horizontal.
     kt: [0.529, 0.566, 0.592, 0.581, 0.581, 0.626, 0.662, 0.645, 0.636, 0.577, 0.523, 0.505]
   },
   sudouest: {
-    label: "Sud-Ouest et Rhône",
-    hint: "Toulouse, Bordeaux, Lyon, Valence",
+    label: "Ensoleillé",
+    hint: "Toulouse, Lyon, Milan, Genève",
     // Cale sur Toulouse, 1395 kWh/m²/an.
     kt: [0.429, 0.467, 0.501, 0.497, 0.496, 0.534, 0.556, 0.555, 0.555, 0.491, 0.429, 0.413]
   },
-  continental: {
-    label: "Centre et Est",
-    hint: "Orléans, Dijon, Strasbourg, Clermont",
-    // Cale sur Strasbourg, 1187 kWh/m²/an.
-    kt: [0.316, 0.390, 0.450, 0.499, 0.480, 0.496, 0.515, 0.518, 0.506, 0.413, 0.321, 0.300]
-  },
   atlantique: {
-    label: "Ouest atlantique",
-    hint: "Nantes, Rennes, La Rochelle, Brest",
+    label: "Tempéré clair",
+    hint: "Nantes, La Rochelle, Munich, Vienne",
     // Cale sur Nantes, 1259 kWh/m²/an.
     kt: [0.366, 0.418, 0.466, 0.507, 0.493, 0.518, 0.519, 0.525, 0.529, 0.445, 0.378, 0.348]
   },
+  continental: {
+    label: "Tempéré",
+    hint: "Strasbourg, Dijon, Bruxelles, Londres",
+    // Cale sur Strasbourg, 1187 kWh/m²/an.
+    kt: [0.316, 0.390, 0.450, 0.499, 0.480, 0.496, 0.515, 0.518, 0.506, 0.413, 0.321, 0.300]
+  },
   oceanique: {
-    label: "Nord et Picardie",
-    hint: "Lille, Amiens, Rouen, Reims",
+    label: "Souvent couvert",
+    hint: "Lille, Rouen, Hambourg, Glasgow",
     // Cale sur Lille, 1066 kWh/m²/an.
     kt: [0.293, 0.361, 0.414, 0.469, 0.460, 0.462, 0.465, 0.471, 0.458, 0.379, 0.300, 0.269]
   }

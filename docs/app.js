@@ -4,10 +4,11 @@
 
 import { CLIMATES, SEASONS, tiltAnalysis, tiltSweep } from "./solar.js";
 import { CRITERIA, rowLayout, shadeFreeWindow } from "./layout.js";
-import { CITIES, nearestCity } from "./sites.js";
+import { CITIES, COUNTRIES, nearestCity } from "./sites.js";
 import { limiterALaPoignee } from "./curseur.js";
 import { initInstallation } from "./installer.js";
 import { initMiseAJour } from "./maj.js";
+import { initTransfert } from "./transfert.js";
 import { drawTilt, drawRows, drawLossCurve, m, deg, pct, hm } from "./draw.js";
 
 /** Longueurs de panneau usuelles, mesurées dans le sens de la pente.
@@ -29,7 +30,10 @@ const LONGUEURS = [
    suit, et la perte annuelle correspondante reste lisible dans l'onglet
    Inclinaison. */
 const defauts = {
-  lat: 45.8, climat: "sudouest", ville: "Lyon",
+  // La longitude ne sert à aucun calcul d'ici — le soleil y est repéré en
+  // heure solaire vraie. Elle est retenue parce que le fichier repris par
+  // SolarDim décrit un chantier, et qu'un chantier a deux coordonnées.
+  lat: 45.8, lon: 4.85, climat: "sudouest", ville: "Lyon",
   azimut: 0, tilt: 30, saison: "annee",
   longueur: 1.96, critere: "solstice_6h"
 };
@@ -88,7 +92,7 @@ function rendreInclinaison() {
   const dans = loss.map((p, i) => (p <= 5 ? i : -1)).filter((i) => i >= 0);
   $("legende-plage").textContent =
     `Entre ${dans[0]}° et ${dans[dans.length - 1]}°, la perte reste sous 5 %. `
-    + `Calculé sur ${SEASONS[etat.saison].hint} en zone ${CLIMATES[etat.climat].label}.`;
+    + `Calculé sur ${SEASONS[etat.saison].hint}, ciel ${CLIMATES[etat.climat].label.toLowerCase()}.`;
 }
 
 /* --- Vue 2 : rangées ------------------------------------------------------- */
@@ -188,7 +192,7 @@ function initSite() {
   $("ville").addEventListener("change", (e) => {
     const c = CITIES.find((x) => x[0] === e.target.value);
     if (!c) return; // entrée « position relevée », rien à recharger
-    etat.ville = c[0]; etat.lat = c[1]; etat.climat = c[3];
+    etat.ville = c[0]; etat.lat = c[1]; etat.lon = c[2]; etat.climat = c[3];
     $("latitude").value = etat.lat;
     $("latitude-val").textContent = `${etat.lat.toFixed(1).replace(".", ",")}°`;
     $("climat").value = etat.climat;
@@ -211,6 +215,7 @@ function initSite() {
         // 25 km on s'en tient à la position, la latitude et la zone suffisent.
         const proche = nearestCity(coords.latitude, coords.longitude);
         etat.lat = Math.round(coords.latitude * 10) / 10;
+        etat.lon = Math.round(coords.longitude * 100) / 100;
         etat.climat = proche.zone;
         etat.ville = proche.km <= 8 ? proche.name
           : proche.km <= 25 ? `Près de ${proche.name}` : "Ma position";
@@ -232,14 +237,21 @@ function initSite() {
 
 const majAideClimat = () => { $("climat-aide").textContent = CLIMATES[etat.climat].hint; };
 
-/** Menu des villes. Une position relevée qui ne tombe sur aucun repère y
-    figure en tête, plutôt que de laisser le menu afficher une ville sans
-    rapport avec l'endroit où l'on se trouve. */
+/** Menu des villes, groupé par pays : quatre-vingt-dix repères à la file
+    seraient illisibles au pouce. Une position relevée qui ne tombe sur aucun
+    repère figure en tête, plutôt que de laisser le menu afficher une ville
+    sans rapport avec l'endroit où l'on se trouve. */
 function majVilles() {
   const connue = CITIES.some((c) => c[0] === etat.ville);
-  const entrees = CITIES.map((c) => [c[0], c[0]]);
-  if (!connue) entrees.unshift(["", etat.ville]);
-  remplirSelect($("ville"), entrees, connue ? etat.ville : "");
+  const option = (v, t) =>
+    `<option value="${v}"${v === (connue ? etat.ville : "") ? " selected" : ""}>${t}</option>`;
+  const groupes = COUNTRIES.map(([code, nom]) => {
+    const villes = CITIES.filter((c) => c[4] === code);
+    return villes.length
+      ? `<optgroup label="${nom}">${villes.map((c) => option(c[0], c[0])).join("")}</optgroup>`
+      : "";
+  });
+  $("ville").innerHTML = (connue ? "" : option("", etat.ville)) + groupes.join("");
 }
 
 function initCommandes() {
@@ -276,6 +288,12 @@ initInstallation({
   bloc: $("installer"),
   texte: $("installer-texte"),
   bouton: $("installer-bouton")
+});
+
+initTransfert({
+  bouton: $("reprise-bouton"),
+  etatEl: $("reprise-etat"),
+  lire: () => etat
 });
 
 addEventListener("load", initMiseAJour);

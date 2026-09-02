@@ -38,7 +38,7 @@ const defauts = {
   longueur: 1.96, critere: "solstice_6h"
 };
 
-const CLE = "pancalc.reglages";
+const CLE = "panopt.reglages";
 let etat = { ...defauts };
 try { Object.assign(etat, JSON.parse(localStorage.getItem(CLE) || "{}")); } catch { /* premier lancement */ }
 

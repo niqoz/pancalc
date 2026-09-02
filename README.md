@@ -87,8 +87,15 @@ google-chrome --headless=new --disable-gpu --window-size=1200,630 \
 changement de domaine est donc un remplacement à faire d'un bloc :
 
 ```sh
-grep -rl niqoz.github.io/pancalc docs/ | xargs sed -i 's#https://niqoz.github.io/pancalc#https://<nouveau>#g'
+grep -rl niqoz.github.io/panopt docs/ | xargs sed -i 's#https://niqoz.github.io/panopt#https://<nouveau>#g'
 ```
+
+Ces sept-là sont des adresses absolues. **Un changement de sous-chemin en
+touche trois de plus** : `id`, `start_url` et `scope` du
+`manifest.webmanifest`, écrits en chemins absolus depuis la racine du
+domaine. Les oublier ne casse rien de visible — le site s'affiche —, mais le
+manifeste sort du périmètre servi et l'installation ne se propose plus. Le
+reste des chemins est relatif et suit tout seul.
 
 `robots.txt` n'a d'effet qu'à la racine d'un domaine : servi sous un
 sous-chemin de `github.io`, il est ignoré. `sitemap.xml`, lui, agit dès qu'il

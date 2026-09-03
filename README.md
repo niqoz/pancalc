@@ -154,6 +154,12 @@ donc à l'ouverture d'après. Incrémenter `CACHE` dans `docs/sw.js` reste utile
 pour évincer d'un coup des fichiers retirés, mais n'est plus nécessaire à la
 diffusion.
 
+Lors d'un changement d'habillage incompatible avec l'ancien HTML, versionner
+aussi l'URL de la feuille de style dans `index.html` et la lister dans `ASSETS`
+(actuellement `style.css?v=14`). L'installation contourne le cache HTTP ; le
+rafraîchissement le revalide et reste actif jusqu'à l'écriture du fichier,
+afin de ne pas conserver un mélange ancien habillage / nouveau logo.
+
 `outils-icones.py` régénère les deux icônes ; il n'est pas nécessaire au
 fonctionnement.
 

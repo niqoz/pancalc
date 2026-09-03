@@ -43,7 +43,7 @@ test("tout fichier livre est mis en cache pour le hors ligne", () => {
 
 test("la liste du service worker ne reference aucun fichier disparu", () => {
   const surDisque = new Set(fichiers());
-  for (const f of assets()) assert.ok(surDisque.has(f), `${f} liste dans sw.js mais absent de docs/`);
+  for (const f of assets()) assert.ok(surDisque.has(f.split("?")[0]), `${f} liste dans sw.js mais absent de docs/`);
 });
 
 test("les modules charges par la page sont tous listes", () => {
@@ -65,4 +65,14 @@ test("le manifeste et la page pointent les memes icones", () => {
   const liste = new Set(assets());
   for (const i of manifeste.icons) assert.ok(liste.has(i.src), `${i.src} absent du cache`);
   assert.equal(manifeste.start_url, manifeste.scope, "start_url et scope doivent coincider");
+});
+
+test("le nouvel entete ne reutilise pas la feuille de style de l'ancien logo", () => {
+  const html = lire("index.html");
+  const style = html.match(/rel="stylesheet" href="([^"]+)"/)[1];
+  assert.match(style, /^style\.css\?v=\d+$/);
+  assert.ok(assets().includes(style), "la feuille versionnee doit fonctionner hors ligne");
+  const logo = html.match(/<img class="marque-logo"[^>]+>/)[0];
+  assert.match(logo, /width="604"/);
+  assert.match(logo, /height="245"/);
 });

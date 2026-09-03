@@ -8,11 +8,12 @@
 
    Incrémenter CACHE purge tout d'un coup ; ce n'est plus indispensable à la
    diffusion d'une mise à jour, seulement à l'éviction de fichiers retirés. */
-const CACHE = "panopt-v13";
+const CACHE = "panopt-v14";
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
+  "./style.css?v=14",
   "./brandmark-panel.svg",
   "./panel-optimizer-logo.svg",
   "./app.js",
@@ -32,7 +33,12 @@ const ASSETS = [
 ];
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // Le cache HTTP peut encore contenir l'ancien habillage : la nouvelle
+  // version hors ligne doit repartir des fichiers du serveur.
+  const requetes = ASSETS.map((chemin) => new Request(
+    new URL(chemin, self.location.href), { cache: "reload" }
+  ));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(requetes)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {
@@ -47,16 +53,22 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
 
-  e.respondWith(caches.open(CACHE).then(async (cache) => {
-    const enCache = await cache.match(e.request);
-    // La requête réseau part dans tous les cas : c'est elle qui apportera la
-    // version suivante, même quand la réponse servie vient du cache.
-    const surLeReseau = fetch(e.request)
-      .then((reponse) => {
-        if (reponse && reponse.ok) cache.put(e.request, reponse.clone());
+  const accesCache = caches.open(CACHE);
+  // Revalider même si le cache HTTP juge encore l'ancienne réponse fraîche.
+  const surLeReseau = accesCache.then((cache) => fetch(e.request, { cache: "no-cache" })
+      .then(async (reponse) => {
+        if (reponse && reponse.ok) {
+          try { await cache.put(e.request, reponse.clone()); }
+          catch { /* Un stockage plein ne doit pas masquer la réponse réseau. */ }
+        }
         return reponse;
       })
-      .catch(() => null);
+      .catch(() => null));
+  // Sans waitUntil, le worker peut s'arrêter dès que le cache a répondu,
+  // avant le téléchargement ou l'écriture de la version suivante.
+  e.waitUntil(surLeReseau.then(() => {}));
+  e.respondWith(accesCache.then(async (cache) => {
+    const enCache = await cache.match(e.request);
     return enCache || surLeReseau.then((r) => r || new Response("", { status: 504 }));
   }));
 });

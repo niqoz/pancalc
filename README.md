@@ -156,9 +156,19 @@ diffusion.
 
 Lors d'un changement d'habillage incompatible avec l'ancien HTML, versionner
 aussi l'URL de la feuille de style dans `index.html` et la lister dans `ASSETS`
-(actuellement `style.css?v=14`). L'installation contourne le cache HTTP ; le
+(actuellement `style.css?v=15`). L'installation contourne le cache HTTP ; le
 rafraîchissement le revalide et reste actif jusqu'à l'écriture du fichier,
 afin de ne pas conserver un mélange ancien habillage / nouveau logo.
+
+Le raccourci « Me localiser » du bandeau applique la position uniquement sur appui.
+Avec une permission déjà accordée, un relevé à l'ouverture et au retour au
+premier plan masque le raccourci si le chantier est à moins de 10 km (ou dans
+la marge d'incertitude du GPS). Sans permission ou relevé disponible, il reste
+proposé pour demander la position. Aucun suivi continu ni envoi de coordonnées
+à un service tiers n'est ajouté ; le choix manuel du chantier est conservé.
+La recette interactive `tests/navigateur/manuel/localisation.html`, servie
+depuis la racine du dépôt, charge l'interface réelle avec quatre scénarios GPS
+fictifs. Elle isole les réglages et désactive le service worker dans l'iframe.
 
 `outils-icones.py` régénère les deux icônes ; il n'est pas nécessaire au
 fonctionnement.

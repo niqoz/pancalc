@@ -8,6 +8,7 @@ import { CITIES, COUNTRIES, nearestCity } from "./sites.js";
 import { limiterALaPoignee } from "./curseur.js";
 import { initInstallation } from "./installer.js";
 import { initMiseAJour } from "./maj.js";
+import { creerLocalisation } from "./localisation.js";
 import { drawTilt, drawRows, drawLossCurve, m, deg, pct, hm } from "./draw.js";
 
 /** Longueurs de panneau usuelles, mesurées dans le sens de la pente.
@@ -117,6 +118,7 @@ function rendreRangees() {
 /* --- Orchestration --------------------------------------------------------- */
 
 let vue = "inclinaison";
+let localisation;
 const rendus = { inclinaison: rendreInclinaison, rangees: rendreRangees };
 
 function rendre() {
@@ -124,6 +126,7 @@ function rendre() {
   $("site-libelle").textContent = etat.ville;
   $("site-detail").textContent =
     `${etat.lat.toFixed(1).replace(".", ",")}° N · ${CLIMATES[etat.climat].label}`;
+  localisation?.actualiser();
   rendus[vue]();
   sauver();
 }
@@ -141,6 +144,7 @@ function curseur(id, cle, format) {
   curseurs.push(recaler);
   el.addEventListener("input", () => {
     etat[cle] = Number(el.value);
+    if (cle === "lat") localisation?.effacerMessage();
     afficher();
     rendre();
   });
@@ -192,6 +196,7 @@ function initSite() {
     const c = CITIES.find((x) => x[0] === e.target.value);
     if (!c) return; // entrée « position relevée », rien à recharger
     etat.ville = c[0]; etat.lat = c[1]; etat.lon = c[2]; etat.climat = c[3];
+    localisation.effacerMessage();
     $("latitude").value = etat.lat;
     $("latitude-val").textContent = `${etat.lat.toFixed(1).replace(".", ",")}°`;
     $("climat").value = etat.climat;
@@ -204,33 +209,47 @@ function initSite() {
 
   curseur("latitude", "lat", (v) => `${v.toFixed(1).replace(".", ",")}°`);
 
-  $("geoloc").addEventListener("click", () => {
-    const etatEl = $("geoloc-etat");
-    if (!navigator.geolocation) { etatEl.textContent = "Ce navigateur ne donne pas la position."; return; }
-    etatEl.textContent = "Relevé en cours…";
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        // Nommer un repère situé à 70 km induit en erreur : au-delà de
-        // 25 km on s'en tient à la position, la latitude et la zone suffisent.
-        const proche = nearestCity(coords.latitude, coords.longitude);
-        etat.lat = Math.round(coords.latitude * 10) / 10;
-        etat.lon = Math.round(coords.longitude * 100) / 100;
-        etat.climat = proche.zone;
-        etat.ville = proche.km <= 8 ? proche.name
-          : proche.km <= 25 ? `Près de ${proche.name}` : "Ma position";
-        $("latitude").value = etat.lat;
-        $("latitude-val").textContent = `${etat.lat.toFixed(1).replace(".", ",")}°`;
-        $("climat").value = etat.climat;
-        majVilles();
-        majAideClimat();
-        etatEl.textContent = proche.km <= 25
-          ? `Position relevée, à ${proche.km} km de ${proche.name}. Vérifie la zone climatique.`
-          : "Position relevée. Aucun repère à moins de 25 km : vérifie la zone climatique.";
-        rendre();
-      },
-      () => { etatEl.textContent = "Position refusée ou indisponible. Choisis une ville."; },
-      { timeout: 10000, maximumAge: 300000 }
-    );
+  localisation = creerLocalisation({
+    navigateur: navigator,
+    lireSite: () => etat,
+    afficher: ({ visible, enCours, message }) => {
+      const raccourci = $("ma-loc");
+      if (raccourci) {
+        raccourci.hidden = !visible;
+        raccourci.disabled = enCours;
+        raccourci.textContent = enCours ? "Relevé…" : "Me localiser";
+      }
+      $("geoloc").disabled = enCours;
+      $("geoloc-etat").textContent = message;
+      const retour = $("ma-loc-etat");
+      if (retour) retour.textContent = message;
+    },
+    appliquer: (coords) => {
+      // Nommer un repère situé à 70 km induit en erreur : au-delà de
+      // 25 km on s'en tient à la position, la latitude et la zone suffisent.
+      const proche = nearestCity(coords.latitude, coords.longitude);
+      etat.lat = Math.round(coords.latitude * 10) / 10;
+      etat.lon = Math.round(coords.longitude * 100) / 100;
+      etat.climat = proche.zone;
+      etat.ville = proche.km <= 8 ? proche.name
+        : proche.km <= 25 ? `Près de ${proche.name}` : "Ma position";
+      $("latitude").value = etat.lat;
+      $("latitude-val").textContent = `${etat.lat.toFixed(1).replace(".", ",")}°`;
+      $("climat").value = etat.climat;
+      majVilles();
+      majAideClimat();
+      const message = proche.km <= 25
+        ? `Position relevée, à ${proche.km} km de ${proche.name}. Vérifie la zone climatique.`
+        : "Position relevée. Aucun repère à moins de 25 km : vérifie la zone climatique.";
+      rendre();
+      return message;
+    }
+  });
+  $("geoloc").addEventListener("click", () => localisation.relever());
+  $("ma-loc")?.addEventListener("click", () => localisation.relever());
+  localisation.verifier();
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) localisation.verifier();
   });
 }
 

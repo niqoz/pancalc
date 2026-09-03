@@ -20,7 +20,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
 
@@ -29,10 +29,14 @@
     <img class="marque-logo" src="panel-optimizer-logo.svg"
       width="604" height="245" alt="Panel Optimizer, par SolarDim">
   </h1>
-  <button type="button" id="ouvrir-site" class="site-resume" aria-expanded="false" aria-controls="site">
-    <span id="site-libelle">Lyon</span>
-    <span id="site-detail">45,8° N · Sud-Ouest</span>
-  </button>
+  <div class="site-actions">
+    <button type="button" id="ouvrir-site" class="site-resume" aria-expanded="false" aria-controls="site">
+      <span id="site-libelle">Lyon</span>
+      <span id="site-detail">45,8° N · Sud-Ouest</span>
+    </button>
+    <button type="button" id="ma-loc" class="ma-loc" title="Utiliser ma position GPS" hidden>Me localiser</button>
+  </div>
+  <p id="ma-loc-etat" class="ma-loc-etat" role="status"></p>
 </header>
 
 <section id="site" class="site" hidden>

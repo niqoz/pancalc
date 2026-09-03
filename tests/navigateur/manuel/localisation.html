@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recette du raccourci de localisation</title>
+<style>
+  body { margin: 12px; font: 15px system-ui; background: #faf6ef; }
+  label, select, button { margin: 4px; }
+  iframe { display: block; width: 100%; height: 900px; border: 1px solid #cfc0a6; }
+  #resultat { white-space: pre-wrap; }
+</style>
+<h1>Localisation — coordonnées fictives</h1>
+<p>Cette recette charge la vraie interface, sans lire ni écrire les réglages
+du navigateur, sans service worker et sans accéder à la position réelle.</p>
+<label for="scenario">Scénario GPS</label>
+<select id="scenario">
+  <option value="distant">Paris, chantier à Lyon</option>
+  <option value="proche">Lyon, chantier à Lyon</option>
+  <option value="refus">Position refusée</option>
+  <option value="demande">Permission à demander, Paris</option>
+</select>
+<button id="charger">Réinitialiser l’essai</button>
+<p id="appels" role="status">Aucun relevé</p>
+<pre id="resultat">Essai interactif prêt — utiliser l’extension Chrome.</pre>
+<iframe title="Application en test"></iframe>
+<script type="module">
+  const html = await (await fetch("../../../docs/index.html")).text();
+  const cadre = document.querySelector("iframe");
+  function charger() {
+    const scenario = document.querySelector("#scenario").value;
+    document.querySelector("#appels").textContent = "Aucun relevé";
+    // Doubles de test limités à cette iframe. Aucun crochet n'est livré
+    // dans docs/ ; tous les boutons et calculs viennent de l'application.
+    const preparation = `
+      const scenario = ${JSON.stringify(scenario)};
+      const memoire = new Map();
+      Object.defineProperty(window, 'localStorage', { value: {
+        getItem: (cle) => memoire.get(cle) ?? null,
+        setItem: (cle, valeur) => memoire.set(cle, valeur)
+      }});
+      Object.defineProperty(navigator, 'serviceWorker', { value: {
+        controller: null, addEventListener() {},
+        register: () => Promise.reject(new Error('Désactivé pour la recette'))
+      }});
+      Object.defineProperty(navigator, 'permissions', { value: {
+        query: async () => ({state: scenario === 'demande' ? 'prompt' : scenario === 'refus' ? 'denied' : 'granted'})
+      }});
+      let appels = 0;
+      Object.defineProperty(navigator, 'geolocation', { value: {
+        getCurrentPosition(ok, ko) {
+          parent.document.querySelector('#appels').textContent = 'Relevés fictifs : ' + (++appels);
+          setTimeout(() => scenario === 'refus' ? ko({code:1}) : ok({coords: {
+            latitude: scenario === 'proche' ? 45.75 : 48.86,
+            longitude: scenario === 'proche' ? 4.85 : 2.35,
+            accuracy: 20
+          }}), 500);
+        }
+      }});
+    `;
+    cadre.srcdoc = html.replace('<head>', '<head><base href="../../../docs/">'
+      + '<script>' + preparation + '<' + '/script>');
+  }
+  document.querySelector("#charger").addEventListener("click", charger);
+  charger();
+</script>
+</html>

@@ -135,8 +135,9 @@ node tools/kt-pvgis.mjs villes.json  # refait les indices de clarté depuis PVGI
 python3 -m http.server -d docs    # les modules ES exigent http://, pas file://
 ```
 
-L'identité — emblème solaire et panneau, palette « Terrasse », Fraunces en
-titres, DM Sans en corps — prolonge celle de SolarDim. Les
+L'identité — bannière « Panel Optimizer by SolarDim », emblème solaire et
+panneau, palette « Terrasse », Fraunces en titres, DM Sans en corps — prolonge
+celle de SolarDim. Les
 variables de `:root` dans `style.css` sont celles de `solardim-site`, mode
 sombre compris.
 

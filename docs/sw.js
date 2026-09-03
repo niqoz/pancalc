@@ -8,12 +8,13 @@
 
    Incrémenter CACHE purge tout d'un coup ; ce n'est plus indispensable à la
    diffusion d'une mise à jour, seulement à l'éviction de fichiers retirés. */
-const CACHE = "panopt-v12";
+const CACHE = "panopt-v13";
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
   "./brandmark-panel.svg",
+  "./panel-optimizer-logo.svg",
   "./app.js",
   "./draw.js",
   "./solar.js",

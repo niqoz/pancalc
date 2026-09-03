@@ -176,6 +176,16 @@ rechargement.
 `tests/navigateur/mise-a-jour.sh` rejoue le scénario complet. Il a été vérifié
 qu'il échoue bien avec l'ancien service worker.
 
+**Le câblage est aussi fragile que le mécanisme.** `addEventListener("load",
+initMiseAJour)` passe l'objet Event en premier argument, donc en guise de
+chemin : `register()` demande « [object Event] », le 404 tombe dans le `catch`
+du hors-ligne, et l'application cesse silencieusement de se mettre à jour. Le
+défaut a vécu du commit `bd321d1` au 3 septembre 2026 sans que rien le montre
+— `mise-a-jour.sh` appelle `initMiseAJour()` lui-même et n'éprouve donc jamais
+la ligne d'`app.js`. La fonction ignore désormais un argument qui n'est pas une
+chaîne, et `tests/maj.test.mjs` verrouille les deux côtés : le chemin demandé
+au navigateur, et la forme du câblage dans `app.js`.
+
 ## Essais en navigateur
 
 `tests/navigateur/lancer.sh` exécute **toutes** les pages de

@@ -289,4 +289,4 @@ initInstallation({
   bouton: $("installer-bouton")
 });
 
-addEventListener("load", initMiseAJour);
+addEventListener("load", () => initMiseAJour());

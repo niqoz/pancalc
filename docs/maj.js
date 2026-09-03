@@ -17,8 +17,14 @@ export function doitRecharger(avaitUnControleur, dejaEnCours) {
   return avaitUnControleur && !dejaEnCours;
 }
 
-export function initMiseAJour(chemin = "sw.js") {
+/* Le chemin n'est pas pris tel quel : posée en écouteur (`addEventListener(
+   "load", initMiseAJour)`), la fonction reçoit l'objet Event en premier
+   argument, `register()` va chercher « [object Event] », et le `catch` du
+   hors-ligne avale le 404 sans un mot — l'application n'est alors plus jamais
+   mise à jour, et rien ne le signale. */
+export function initMiseAJour(chemin) {
   if (!("serviceWorker" in navigator)) return;
+  const url = typeof chemin === "string" ? chemin : "sw.js";
 
   const avaitUnControleur = Boolean(navigator.serviceWorker.controller);
   let rechargeEnCours = false;
@@ -29,7 +35,7 @@ export function initMiseAJour(chemin = "sw.js") {
     location.reload();
   });
 
-  navigator.serviceWorker.register(chemin).then((inscription) => {
+  navigator.serviceWorker.register(url).then((inscription) => {
     const verifier = () => inscription.update().catch(() => { /* hors ligne */ });
     verifier();
     // Reprise après veille : c'est le seul moment où une application

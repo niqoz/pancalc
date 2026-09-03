@@ -136,16 +136,15 @@ forfait d'un installateur sur un chantier.
 Rien n'est mesuré dans l'application. L'acquisition se lira côté Play Console,
 par le `referrer` du lien vers la fiche — lien qui attend la publication.
 
-## Reprise dans SolarDim
+## Bannière SolarDim
 
-`transfert.js` écrit un « transfer v2 » — le format d'échange que les clients
-Android et Windows se lisent déjà (`core/.../Transfer.kt`). Trois pièges, tous
-couverts par `tests/transfert.test.mjs` : c'est le manifeste `contents` qui
-décide de la forme lue et non le `type`, faute de quoi le fichier passe pour la
-forme à plat et arrive sans ses paramètres, en silence ; `aspect` est l'azimut
-de PVGIS, identique à celui d'ici, donc aucune conversion à inventer ; et la
-position exige les **deux** coordonnées, alors que la longitude n'entre dans
-aucun calcul de l'application — rien ne signalerait sa disparition de l'état.
+Le pied de page porte la bannière publicitaire de l'application, reprise de
+`~/Projets/SolairDimDroid/publicite/traductions/` (six langues à la source,
+seule la française est livrée) et convertie en WebP — le PNG d'origine pèse
+1,2 Mo, ce qui n'a rien à faire dans un cache hors ligne. Elle est carrée :
+`.promo` plafonne sa largeur, sans quoi elle mange l'écran. Pas de lien tant
+que la fiche Play Store n'est pas publiée ; l'URL de campagne attend dans le
+README.
 
 ## Invite d'installation
 
@@ -207,3 +206,8 @@ L'onglet « Terrain » — calepinage sur profondeur contrainte : `fieldSweep`,
 MWc/ha — a été retiré à la demande de l'utilisateur, avec son moteur, ses
 tests et ses styles plutôt que laissé sans emploi. Le tout reste récupérable
 au commit `1349813`.
+
+La **reprise des réglages dans SolarDim** — `transfert.js`, son « transfer
+v2 », ses tests node et sa page d'essai navigateur — a été retirée de même :
+l'utilisateur ne veut pas d'échange de paramètres entre les deux applications.
+La bannière occupe désormais sa place dans le pied.

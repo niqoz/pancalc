@@ -443,24 +443,14 @@ input[type="range"]:focus-visible { outline: 2px solid var(--terracotta); outlin
 
 /* --- Pied ---------------------------------------------------------------- */
 
-/* Reprise dans SolarDim : même forme que l'invite d'installation, parce que
-   c'est la même nature de proposition — un pas de plus, jamais en travers. */
-.reprise {
-  margin: 0 0 18px; padding: 14px 16px;
-  background: var(--surface);
+/* Bannière SolarDim. L'image porte déjà son fond et sa marge : l'enchâsser
+   dans un second cadre ferait doublon, seul le trait de bordure la pose. Elle
+   est carrée, d'où la largeur plafonnée : à 620 px elle mangerait l'écran. */
+.promo { margin: 0 auto 18px; max-width: 420px; }
+.promo img {
+  display: block; width: 100%; height: auto;
   border: 1px solid var(--bordure); border-radius: var(--rayon);
 }
-.reprise p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--encre); }
-.reprise strong { font-weight: 600; }
-.reprise button {
-  margin-top: 12px; min-height: 46px; padding: 0 18px;
-  background: none; color: var(--terracotta);
-  border: 1px solid var(--bordure-nette); border-radius: var(--rayon);
-  font: inherit; font-size: 16px; font-weight: 500; cursor: pointer;
-}
-.reprise button:hover { border-color: var(--terracotta); }
-.reprise .aide:empty { display: none; }
-.reprise .aide { margin-top: 8px; }
 
 .pied {
   max-width: 620px; margin: 0 auto; padding: 20px var(--gouttiere) 28px;

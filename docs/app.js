@@ -8,7 +8,6 @@ import { CITIES, COUNTRIES, nearestCity } from "./sites.js";
 import { limiterALaPoignee } from "./curseur.js";
 import { initInstallation } from "./installer.js";
 import { initMiseAJour } from "./maj.js";
-import { initTransfert } from "./transfert.js";
 import { drawTilt, drawRows, drawLossCurve, m, deg, pct, hm } from "./draw.js";
 
 /** Longueurs de panneau usuelles, mesurées dans le sens de la pente.
@@ -288,12 +287,6 @@ initInstallation({
   bloc: $("installer"),
   texte: $("installer-texte"),
   bouton: $("installer-bouton")
-});
-
-initTransfert({
-  bouton: $("reprise-bouton"),
-  etatEl: $("reprise-etat"),
-  lire: () => etat
 });
 
 addEventListener("load", initMiseAJour);

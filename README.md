@@ -116,17 +116,14 @@ Le `referrer` remonte à l'installation et l'acquisition se lit par
 un bouton vers une fiche absente coûte plus qu'il ne rapporte, et il attend la
 publication.
 
-## Reprise dans SolarDim
+## Bannière SolarDim
 
-Le bouton du pied de page écrit un « transfer v2 », le format d'échange des
-clients Android et Windows : le site, l'inclinaison et l'orientation s'y
-rouvrent tels quels. Sur téléphone il passe par le partage du système, ailleurs
-il enregistre un fichier, qui s'importe depuis l'accueil de SolarDim. La source
-de vérité du format est `Transfer.kt` côté SolarDim ; `tests/transfert.test.mjs`
-fige ce que l'autre côté attend, faute de quoi un écart ne se verrait qu'à
-l'import, sur une étude ouverte sans ses réglages. `tests/navigateur/` parcourt
-en plus le chemin qui va du clic au fichier — Blob, ancre de téléchargement,
-repli quand le partage du système n'existe pas —, que node ne reproduit pas.
+Le pied de page porte une bannière de l'application, prise telle quelle dans
+`SolairDimDroid/publicite/traductions/` et convertie en WebP : 1,2 Mo de PNG
+deviennent 100 ko, ce qui la rend supportable dans le cache hors ligne. Six
+langues existent à la source ; la page étant en français, seule la française
+est livrée. L'image n'est pas cliquable pour l'instant — le lien de campagne
+ci-dessus l'enveloppera le jour de la publication.
 
 ## Développement
 
